@@ -25,7 +25,7 @@ class ExerciseList extends Component {
                                 {!exercises || exercises.length <= 0 ? (
                                     <tr>
                                         <td colSpan="6" align="center">
-                                            <b>No exercise</b>
+                                            <b>Exercises Loading... May take a minute.</b>
                                         </td>
                                     </tr>
                                 ) : (
@@ -71,7 +71,7 @@ class ExerciseList extends Component {
                                 {!exercises || exercises.length <= 0 ? (
                                     <tr>
                                         <td colSpan="6" align="center">
-                                            <b>No exercise</b>
+                                            <b>Exercises Loading... May take a minute.</b>
                                         </td>
                                     </tr>
                                 ) : (
@@ -123,7 +123,7 @@ class ExerciseList extends Component {
                                 {!exercises || exercises.length <= 0 ? (
                                     <tr>
                                         <td colSpan="6" align="center">
-                                            <b>No exercise</b>
+                                            <b>Exercises Loading... May take a minute.</b>
                                         </td>
                                     </tr>
                                 ) : (
@@ -155,7 +155,7 @@ class ExerciseList extends Component {
                                 {!exercises || exercises.length <= 0 ? (
                                     <tr>
                                         <td colSpan="6" align="center">
-                                            <b>No exercise</b>
+                                            <b>Exercises Loading... May take a minute.</b>
                                         </td>
                                     </tr>
                                 ) : (

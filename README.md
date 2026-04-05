@@ -1,10 +1,10 @@
-# Fitness App (Fit2Go + Nutrition Backend)
+# Fitness App 
 
 Unified project workspace containing the Fit2Go mobile web frontend and the Django REST backend.
 
 ## Project Components
 
-- `Fit2go/` -> frontend repository (React mobile web app)
+- `nutrition-app/` -> frontend repository (React mobile web app)
 - `nutrition-backend/` -> backend repository (Django REST API)
 
 ## Tools, Languages, and Frameworks
