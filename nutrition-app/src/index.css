@@ -1,0 +1,342 @@
+.dark {
+
+  background-color: #333;
+  color: #fff;
+
+  .bottom-tab-nav {
+    border-top: solid 1px #222020;
+    box-shadow:
+      inset 0px 11px 8px -20px #232323,
+      inset 0px -15px 35px -2px #262525;
+  }
+
+  nav {
+    background-color: rgb(38, 36, 36);
+    color: #fff;
+  }
+
+  .input-wrapper {
+    background-color: #222020;
+    box-shadow: 0px 0px 8px rgb(0, 0, 0);
+  }
+
+  .results {
+    background-color: #333;
+  }
+
+  .search-input {
+    color: whitesmoke;
+  }
+
+  .result-link {
+    color: whitesmoke
+  }
+
+  .view-button {
+    background-color: #333;
+    color: whitesmoke;
+    border: none;
+  }
+
+  li {
+    color: whitesmoke;
+  }
+
+  .bottom-nav-link,
+  .nav-link {
+    color: #a7aebb !important;
+  }
+
+}
+
+.light {
+  background-color: #fff;
+  color: #333;
+}
+
+.navbar {
+  border-bottom: solid 1px #EBEBEB;
+  box-shadow:
+    inset 0px -11px 8px -10px #CCC,
+    inset 0px -11px 30px -5px #CCC;
+}
+
+.bottom-tab-nav {
+  border-top: solid 1px #EBEBEB;
+  box-shadow:
+    inset 0px 11px 8px -20px #CCC,
+    inset 0px -15px 35px -2px #CCC;
+}
+
+.top-nav {
+  margin-bottom: 2px;
+}
+
+img {
+  text-align: center;
+  max-width: 250px;
+  max-height: 250px;
+}
+
+.bottom-tab-label {
+  font-size: 12px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: hsl(193, 95%, 68%);
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: whitesmoke;
+  color: #fff;
+  padding: 10px 20px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.logo h2 {
+  font-size: 18px;
+  margin: 0;
+  color: #fff;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-button {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.dropdown-button span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background-color: #fff;
+  margin-bottom: 4px;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  display: none;
+  list-style: none;
+  padding: 8px 0;
+  background-color: #333;
+  margin-top: 8px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown.open .dropdown-menu {
+  display: block;
+}
+
+.dropdown-menu li {
+  margin-right: 8px;
+}
+
+.dropdown-menu a {
+  display: block;
+  text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+  padding: 8px 16px;
+}
+
+.profile-info {
+  display: flex;
+  align-items: center;
+}
+
+.profile-info h3 {
+  margin-right: 8px;
+  color: #fff;
+}
+
+button {
+  padding: 6px 12px;
+  background-color: #fff;
+  color: #333;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.login-heading {
+  font-size: 24px;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.login-button {
+  padding: 10px 20px;
+  background-color: #61dafb;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #45b6d9;
+}
+
+.search-bar-container {
+  padding-top: 20vh;
+  width: 100%;
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  list-style-type: none;
+}
+
+li {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.input-wrapper {
+  background-color: white;
+  height: 3.5rem;
+  padding: 0 15px;
+  box-shadow: 0px 0px 8px rgb(198, 197, 197);
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.results {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  margin-top: 50px;
+  max-height: 600px;
+  overflow-y: scroll;
+  position: absolute;
+  left: 0;
+  width: 100%;
+}
+
+.search-input {
+  background-color: transparent;
+  border: none;
+  height: 100%;
+  font-size: 1.25rem;
+  width: 100%;
+  margin-left: 5px;
+}
+
+.search-input:focus {
+  outline: none;
+}
+
+.result {
+  padding: 10px 20px;
+}
+
+.result:hover {
+  background-color: rgb(146, 144, 144);
+}
+
+.result-link {
+  text-decoration: none;
+  color: black;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  nav {
+    flex-wrap: wrap;
+  }
+
+  .dropdown {
+    order: 2;
+    margin-top: 10px;
+  }
+
+  .profile-info {
+    order: 1;
+    margin-top: 10px;
+  }
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

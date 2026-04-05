@@ -1,0 +1,30 @@
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter as Router } from "react-router-dom"
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+import "bootstrap/dist/css/bootstrap.min.css";
+import { GoogleOAuthProvider } from '@react-oauth/google';
+
+const googleClientId = (process.env.REACT_APP_CLIENT_ID || '').trim();
+
+if (!googleClientId) {
+  console.warn('Google OAuth is disabled: REACT_APP_CLIENT_ID is missing.');
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <GoogleOAuthProvider clientId={googleClientId || 'missing-client-id.apps.googleusercontent.com'}>
+    <React.StrictMode>
+      <Router>
+        <App />
+      </Router>
+    </React.StrictMode>
+  </GoogleOAuthProvider>
+);
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();
