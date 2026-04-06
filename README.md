@@ -1,6 +1,6 @@
 # Fitness App 
 
-Unified project workspace containing the Fit2Go mobile web frontend and the Django REST backend.
+Unified project workspace containing the Fit2Go mobile web frontend and the Django REST backend. Public Link: https://fit2go-pro.netlify.app/
 
 ## Project Components
 
@@ -147,3 +147,5 @@ Exercise items are user-specific. When a user signs in, their create, edit, dele
 ## Summary
 
 Built a mobile-first fitness web application where users can browse, search, create, edit, delete, and bookmark exercise records. The frontend is a React app styled with Bootstrap and secured with Google OAuth, served through Netlify. The backend is a Django REST API with token-based authentication, connected to a SQLite database locally and PostgreSQL in production on Render.
+
+
