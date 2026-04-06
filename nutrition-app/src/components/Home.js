@@ -15,7 +15,20 @@ class Home extends Component {
 
   // Fetches data as soon as this page loads.
   componentDidMount() {
-    this.resetState();
+    if (this.props.profile) {
+      this.resetState();
+    }
+  }
+
+  // Re-fetches when user logs in, or clears exercises when user logs out.
+  componentDidUpdate(prevProps) {
+    if (prevProps.profile !== this.props.profile) {
+      if (this.props.profile) {
+        this.resetState();
+      } else {
+        this.setState({ exercises: [] });
+      }
+    }
   }
 
   // Calls the API and stores exercises in component state.
