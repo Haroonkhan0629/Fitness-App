@@ -1,15 +1,17 @@
 import { useState } from "react"
 import { FaSearch } from "react-icons/fa"
+import axios from "axios"
 import { API_URL } from "../constants";
 
-const SearchBar = ({ setResults }) => {
+const SearchBar = ({ setResults, apiToken }) => {
     // Keeps the current text typed in the search box.
     const [input, setInput] = useState("")
 
     // Loads all exercises and keeps only names that include typed text.
     const fetchData = async (searchedValue) => {
-        const response = await fetch(API_URL)
-        const data = await response.json()
+        const config = apiToken ? { headers: { Authorization: `Token ${apiToken}` } } : {};
+        const response = await axios.get(API_URL, config)
+        const data = response.data
         const results = data.filter((result) => {
             return searchedValue && 
             result && 

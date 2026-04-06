@@ -128,10 +128,9 @@ const App = () => {
       <Routes>
         <Route path="/login" element={<LoginPage profile={profile} logout={logout} login={login} theme={theme} apiToken={apiToken}/>} />
         <Route path="/settings" element={<Settings profile={profile} theme={theme} setTheme={setTheme}/>} />
-        <Route path="/home" element={<Home profile={profile} theme={theme}/>} />
-        <Route path="/" element={<HomeFolders theme={theme}/>} />
-        <Route path="/search" element={<Search profile={profile} theme={theme}/>} />
-        <Route path="/bookmarks" element={<Bookmarks profile={profile} theme={theme} />} />
+        <Route path="/" element={<Home profile={profile} theme={theme} apiToken={apiToken}/>} />
+        <Route path="/search" element={<Search profile={profile} theme={theme} apiToken={apiToken}/>} />
+        <Route path="/bookmarks" element={<Bookmarks profile={profile} theme={theme} apiToken={apiToken}/>} />
       </Routes>
     </div>
   );

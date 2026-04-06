@@ -20,15 +20,16 @@ class Home extends Component {
 
   // Re-fetches whenever the user logs in or out so the correct exercises show.
   componentDidUpdate(prevProps) {
-    if (prevProps.profile !== this.props.profile) {
+    if (prevProps.apiToken !== this.props.apiToken) {
       this.resetState();
     }
   }
 
-  // Calls the API and stores exercises in component state.
+  // Calls the API and stores exercises, including the auth token if logged in.
   getExercise = () => {
-    axios.get(API_URL
-    ).then(res => this.setState({ exercises: res.data }));
+    const { apiToken } = this.props;
+    const config = apiToken ? { headers: { Authorization: `Token ${apiToken}` } } : {};
+    axios.get(API_URL, config).then(res => this.setState({ exercises: res.data }));
   };
 
   // Shared refresh function passed to child components.

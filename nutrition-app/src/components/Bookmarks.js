@@ -18,15 +18,16 @@ class Bookmarks extends Component {
 
     // Re-fetches whenever the user logs in or out so the correct exercises show.
     componentDidUpdate(prevProps) {
-        if (prevProps.profile !== this.props.profile) {
+        if (prevProps.apiToken !== this.props.apiToken) {
             this.resetState();
         }
     }
 
-    // Gets the latest exercise list from backend.
+    // Gets the latest exercise list from backend, including auth token if logged in.
     getExercise = () => {
-        axios.get(API_URL
-        ).then(res => this.setState({ exercises: res.data }));
+        const { apiToken } = this.props;
+        const config = apiToken ? { headers: { Authorization: `Token ${apiToken}` } } : {};
+        axios.get(API_URL, config).then(res => this.setState({ exercises: res.data }));
     };
 
     // Central refresh helper used by child components.
