@@ -9,7 +9,12 @@ const SearchBar = ({ setResults, apiToken }) => {
 
     // Loads all exercises and keeps only names that include typed text.
     const fetchData = async (searchedValue) => {
-        const config = apiToken ? { headers: { Authorization: `Token ${apiToken}` } } : {};
+        const config = apiToken
+            ? {
+                headers: { Authorization: `Token ${apiToken}` },
+                params: { mine: 1 }
+            }
+            : {};
         const response = await axios.get(API_URL, config)
         const data = response.data
         const results = data.filter((result) => {

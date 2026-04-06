@@ -28,7 +28,12 @@ class Home extends Component {
   // Calls the API and stores exercises, including the auth token if logged in.
   getExercise = () => {
     const { apiToken } = this.props;
-    const config = apiToken ? { headers: { Authorization: `Token ${apiToken}` } } : {};
+    const config = apiToken
+      ? {
+          headers: { Authorization: `Token ${apiToken}` },
+          params: { mine: 1 }
+        }
+      : {};
     axios.get(API_URL, config).then(res => this.setState({ exercises: res.data }));
   };
 

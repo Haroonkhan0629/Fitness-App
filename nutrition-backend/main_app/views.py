@@ -49,7 +49,12 @@ def exercise_list(request):
             return Response(status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    if request.user.is_authenticated:
+    mine_only = request.query_params.get("mine") == "1"
+
+    if mine_only:
+        if not request.user.is_authenticated:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
         data = Exercise.objects.filter(owner=request.user)
 
         # First-time users receive a personal copy of starter template exercises from JSON.
