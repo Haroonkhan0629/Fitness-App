@@ -21,7 +21,9 @@ class ConfirmRemovalModal extends Component {
   // Deletes an exercise, refreshes the list, then closes the popup.
   deleteFood = id => {
     console.log(id)
-    axios.delete(API_URL + id).then(() => {
+    const { apiToken } = this.props;
+    const config = apiToken ? { headers: { Authorization: `Token ${apiToken}` } } : {};
+    axios.delete(API_URL + id + "/", config).then(() => {
       this.props.resetState();
       this.toggle();
     });

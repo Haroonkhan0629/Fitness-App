@@ -51,6 +51,7 @@ class Bookmarks extends Component {
                             exercises={this.state.exercises}
                             resetState={this.resetState}
                             profile={profile}
+                            apiToken={this.props.apiToken}
                             theme={theme}
                         />
                     </div>
@@ -67,6 +68,7 @@ class Bookmarks extends Component {
                             exercises={this.state.exercises}
                             resetState={this.resetState}
                             profile={profile}
+                            apiToken={this.props.apiToken}
                             theme={theme}
                         />
                     </div>

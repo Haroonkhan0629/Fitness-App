@@ -34,6 +34,7 @@ class ExerciseList extends Component {
                                             <td> <DetailModal
                                                 exercise={exercise}
                                                 profile={profile}
+                                                apiToken={this.props.apiToken}
                                                 theme={theme}
                                             /></td>
                                             <td align="center">
@@ -41,12 +42,14 @@ class ExerciseList extends Component {
                                                     create={false}
                                                     exercise={exercise}
                                                     resetState={this.props.resetState}
+                                                    apiToken={this.props.apiToken}
                                                     theme={theme}
                                                 />
                                                 &nbsp;&nbsp;
                                                 <ConfirmRemovalModal
                                                     id={exercise.id}
                                                     resetState={this.props.resetState}
+                                                    apiToken={this.props.apiToken}
                                                     theme={theme}
                                                 />
                                             </td>
@@ -80,6 +83,7 @@ class ExerciseList extends Component {
                                             <td> <DetailModal
                                                 exercise={exercise}
                                                 profile={profile}
+                                                apiToken={this.props.apiToken}
                                                 theme={theme}
                                             /></td>
                                             <td align="center">
@@ -87,12 +91,14 @@ class ExerciseList extends Component {
                                                     create={false}
                                                     exercise={exercise}
                                                     resetState={this.props.resetState}
+                                                    apiToken={this.props.apiToken}
                                                     theme={theme}
                                                 />
                                                 &nbsp;&nbsp;
                                                 <ConfirmRemovalModal
                                                     id={exercise.id}
                                                     resetState={this.props.resetState}
+                                                    apiToken={this.props.apiToken}
                                                     theme={theme}
                                                 />
                                             </td>
@@ -132,6 +138,7 @@ class ExerciseList extends Component {
                                             <td> <DetailModal
                                                 exercise={exercise}
                                                 profile={profile}
+                                                apiToken={this.props.apiToken}
                                                 theme={theme}
                                             /></td>
                                         </tr>
@@ -164,6 +171,7 @@ class ExerciseList extends Component {
                                             <td> <DetailModal
                                                 exercise={exercise}
                                                 profile={profile}
+                                                apiToken={this.props.apiToken}
                                                 theme={theme}
                                             /></td>
                                         </tr>

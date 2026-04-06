@@ -53,9 +53,10 @@ class Home extends Component {
               exercises={this.state.exercises}
               profile={profile}
               resetState={this.resetState}
+              apiToken={this.props.apiToken}
               theme={theme}
             />
-            <NewExerciseModal create={true} resetState={this.resetState} theme={theme}/>
+            <NewExerciseModal create={true} resetState={this.resetState} apiToken={this.props.apiToken} theme={theme}/>
           </div>
         );
       } else if (theme === 'dark') {
@@ -71,9 +72,10 @@ class Home extends Component {
               exercises={this.state.exercises}
               profile={profile}
               resetState={this.resetState}
+              apiToken={this.props.apiToken}
               theme={theme}
             />
-            <NewExerciseModal create={true} resetState={this.resetState} theme={theme}/>
+            <NewExerciseModal create={true} resetState={this.resetState} apiToken={this.props.apiToken} theme={theme}/>
           </div>
         );
       }
@@ -91,6 +93,7 @@ class Home extends Component {
               exercises={this.state.exercises}
               profile={profile}
               resetState={this.resetState}
+              apiToken={this.props.apiToken}
               theme={theme}
             />
           </div>
@@ -108,6 +111,7 @@ class Home extends Component {
               exercises={this.state.exercises}
               profile={profile}
               resetState={this.resetState}
+              apiToken={this.props.apiToken}
               theme={theme}
             />
           </div>

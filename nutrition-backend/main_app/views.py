@@ -35,10 +35,20 @@ def _load_exercise_templates_from_json():
     return normalized
 
 @ensure_csrf_cookie
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 @permission_classes([AllowAny])
 def exercise_list(request):
     # Logged-out users read from exercise.json; logged-in users read only their own rows.
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        serializer = ExerciseSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(owner=request.user)
+            return Response(status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     if request.user.is_authenticated:
         data = Exercise.objects.filter(owner=request.user)
 

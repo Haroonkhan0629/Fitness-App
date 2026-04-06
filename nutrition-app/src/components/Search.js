@@ -10,7 +10,7 @@ const Search = ({ profile, theme, apiToken }) => {
         <ul className="navigation">
             <li classname="search-bar-container">
                 <SearchBar setResults={setResults} apiToken={apiToken}/>
-                <SearchResults results={results} profile={profile} theme={theme}/>
+                <SearchResults results={results} profile={profile} apiToken={apiToken} theme={theme}/>
             </li>
         </ul>
     )

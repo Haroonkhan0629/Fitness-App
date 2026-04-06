@@ -33,6 +33,7 @@ class DetailModal extends Component {
                                 toggle={this.toggle}
                                 exercise={this.props.exercise}
                                 profile={this.props.profile}
+                                apiToken={this.props.apiToken}
                             />
                         </ModalBody>
                     </Modal>
@@ -52,6 +53,7 @@ class DetailModal extends Component {
                                 toggle={this.toggle}
                                 exercise={this.props.exercise}
                                 profile={this.props.profile}
+                                apiToken={this.props.apiToken}
                             />
                         </ModalBody>
                     </Modal>

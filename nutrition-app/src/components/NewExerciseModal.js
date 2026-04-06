@@ -51,6 +51,7 @@ class NewExerciseModal extends Component {
                                 resetState={this.props.resetState}
                                 toggle={this.toggle}
                                 exercise={this.props.exercise}
+                                apiToken={this.props.apiToken}
                             />
                         </ModalBody>
                     </Modal>
@@ -88,6 +89,7 @@ class NewExerciseModal extends Component {
                                 resetState={this.props.resetState}
                                 toggle={this.toggle}
                                 exercise={this.props.exercise}
+                                apiToken={this.props.apiToken}
                             />
                         </ModalBody>
                     </Modal>

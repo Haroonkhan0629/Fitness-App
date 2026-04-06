@@ -60,8 +60,16 @@ const App = () => {
   useEffect(() => {
     if (profile === null) {
       console.log('profile null');
+      setApiToken(null);
+      localStorage.removeItem('fit2go_token');
+      delete axios.defaults.headers.common['Authorization'];
     } else {
       console.log('sending data to django');
+
+      // Clear any previous account token before issuing a login request for this profile.
+      setApiToken(null);
+      localStorage.removeItem('fit2go_token');
+      delete axios.defaults.headers.common['Authorization'];
 
       const profileData = {
         name: profile['name'],
@@ -90,6 +98,9 @@ const App = () => {
         },
         (error) => {
           console.log(error);
+          setApiToken(null);
+          localStorage.removeItem('fit2go_token');
+          delete axios.defaults.headers.common['Authorization'];
         }
       );
     }
@@ -127,6 +138,7 @@ const App = () => {
       <Routes>
         <Route path="/login" element={<LoginPage profile={profile} logout={logout} login={login} theme={theme} apiToken={apiToken}/>} />
         <Route path="/settings" element={<Settings profile={profile} theme={theme} setTheme={setTheme}/>} />
+        <Route path="/" element={<Home profile={profile} theme={theme} apiToken={apiToken}/>} />
         <Route path="/home" element={<Home profile={profile} theme={theme} apiToken={apiToken}/>} />
         <Route path="/search" element={<Search profile={profile} theme={theme} apiToken={apiToken}/>} />
         <Route path="/bookmarks" element={<Bookmarks profile={profile} theme={theme} apiToken={apiToken}/>} />

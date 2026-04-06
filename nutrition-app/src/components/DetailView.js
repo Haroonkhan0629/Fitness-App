@@ -8,11 +8,17 @@ class DetailView extends Component {
     render() {
         const exercise = this.props.exercise
         const profile = this.props.profile
+        const apiToken = this.props.apiToken
 
         // Toggles bookmark status for this exercise on the server.
-        function toggleSave(e) {
+        const toggleSave = (e) => {
             e.preventDefault()
-            axios.put(API_URL + exercise.id + "/bookmarks/")
+            const config = apiToken ? { headers: { Authorization: `Token ${apiToken}` } } : {}
+            axios.put(API_URL + exercise.id + "/bookmarks/", {}, config).then(() => {
+                if (this.props.resetState) {
+                    this.props.resetState()
+                }
+            })
         }
 
         if (profile) {
