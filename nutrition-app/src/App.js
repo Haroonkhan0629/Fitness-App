@@ -108,6 +108,9 @@ const App = () => {
   // Signs out from Google and clears local profile data.
   const logout = () => {
     googleLogout();
+    // Clear the auth header immediately so any re-fetch triggered by profile
+    // becoming null goes out without credentials and gets the template list.
+    delete axios.defaults.headers.common['Authorization'];
     setProfile(null);
     setApiToken(null);
     localStorage.removeItem('fit2go_profile');
