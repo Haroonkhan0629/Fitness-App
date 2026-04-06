@@ -17,7 +17,10 @@ const App = () => {
   // Keeps temporary Google login response details.
   const [user, setUser] = useState(null);
   // Stores the signed-in user's profile used across the app.
-  const [profile, setProfile] = useState(null);
+  const [profile, setProfile] = useState(() => {
+    const savedProfile = localStorage.getItem('fit2go_profile');
+    return savedProfile ? JSON.parse(savedProfile) : null;
+  });
   // Controls light or dark color mode.
   const [theme, setTheme] = useState('light');
 
@@ -41,7 +44,9 @@ const App = () => {
         .then(
           (response) => {
             console.log('changes');
-            setProfile(response['data']);
+            const nextProfile = response['data'];
+            setProfile(nextProfile);
+            localStorage.setItem('fit2go_profile', JSON.stringify(nextProfile));
           },
           (error) => {
             console.log(error);
@@ -80,6 +85,7 @@ const App = () => {
   const logout = () => {
     googleLogout();
     setProfile(null);
+    localStorage.removeItem('fit2go_profile');
   };
 
   if (profile) {
@@ -89,7 +95,7 @@ const App = () => {
 
   return (
     <div>
-      <Navigation />
+      <Navigation profile={profile} />
       <Routes>
         <Route path="/login" element={<LoginPage profile={profile} logout={logout} login={login} theme={theme}/>} />
         <Route path="/settings" element={<Settings profile={profile} theme={theme} setTheme={setTheme}/>} />

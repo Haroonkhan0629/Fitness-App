@@ -1,12 +1,26 @@
 .bottom-nav-link,
 .nav-link {
   color: #55575b !important;
-  width: 70px;
-  margin-right: 15px;
+  margin-right: 0;
 }
 
 .bottom-nav-link.active {
   color: #922c88 !important;
+}
+
+.bottom-tab-nav .nav-item {
+  flex: 1;
+}
+
+.bottom-tab-nav .bottom-nav-link {
+  width: 100%;
+  padding: 6px 2px;
+  text-align: center;
+}
+
+.bottom-tab-nav .bottom-tab-label {
+  font-size: 11px;
+  line-height: 1.1;
 }
 
 

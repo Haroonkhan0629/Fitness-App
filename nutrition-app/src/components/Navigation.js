@@ -6,7 +6,7 @@ import { faSearch, faHome, faUserCircle, faGear, faBookmark } from '@fortawesome
 
 // One tab list powers the bottom mobile navigation.
 const tabs = [{
-  route: "",
+  route: "/home",
   icon: faHome,
   label: "Home"
 }, {
@@ -27,7 +27,7 @@ const tabs = [{
   label: "Setting"
 }]
 
-const Navigation = () => {
+const Navigation = ({ profile }) => {
 
   return (
     <div>
@@ -42,7 +42,7 @@ const Navigation = () => {
             </NavItem>
             <NavItem>
               <NavLink to="/login" className="nav-link">
-                Login
+                {profile ? 'Profile' : 'Login'}
               </NavLink>
             </NavItem>
             <NavItem>
@@ -63,7 +63,10 @@ const Navigation = () => {
           <div className=" d-flex flex-row justify-content-around w-100">
             {tabs.map((tab, index) => (
               <NavItem key={`tab-${index}`}>
-                <NavLink to={tab.route} className="nav-link bottom-nav-link" activeClassName="active">
+                <NavLink
+                  to={tab.route}
+                  className={({ isActive }) => `nav-link bottom-nav-link${isActive ? ' active' : ''}`}
+                >
                   <div className="row d-flex flex-column justify-content-center align-items-center">
                     <FontAwesomeIcon size="lg" icon={tab.icon} />
                     <div className="bottom-tab-label">{tab.label}</div>
