@@ -6,15 +6,15 @@ from .models import Exercise
 from .serializers import *
 from rest_framework.decorators import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.contrib.auth.models import User
 
 @ensure_csrf_cookie
-@api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated])
+@api_view(['GET'])
+@permission_classes([AllowAny])
 def exercise_list(request):
-    # Returns only the signed-in user's exercises or creates one for that user.
-    if request.method == 'GET':
+    # Logged-out users see template exercises; logged-in users see their own.
+    if request.user.is_authenticated:
         data = Exercise.objects.filter(owner=request.user)
 
         # First-time users receive a personal copy of starter template exercises.
@@ -31,18 +31,22 @@ def exercise_list(request):
                     owner=request.user,
                 )
             data = Exercise.objects.filter(owner=request.user)
+    else:
+        data = Exercise.objects.filter(owner__isnull=True)
 
-        serializer = ExerciseSerializer(data, context={'request': request}, many=True)
+    serializer = ExerciseSerializer(data, context={'request': request}, many=True)
+    return Response(serializer.data)
 
-        return Response(serializer.data)
-
-    elif request.method == 'POST':
-        serializer = ExerciseSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(owner=request.user)
-            return Response(status=status.HTTP_201_CREATED)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+@ensure_csrf_cookie
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def exercise_create(request):
+    # Creates a new exercise owned by the signed-in user.
+    serializer = ExerciseSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save(owner=request.user)
+        return Response(status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @ensure_csrf_cookie
 @api_view(['PUT', 'DELETE'])

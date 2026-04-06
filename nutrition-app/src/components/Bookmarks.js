@@ -13,19 +13,13 @@ class Bookmarks extends Component {
 
     // Loads data once when this screen opens.
     componentDidMount() {
-        if (this.props.profile) {
-            this.resetState();
-        }
+        this.resetState();
     }
 
-    // Re-fetches when user logs in, or clears exercises when user logs out.
+    // Re-fetches whenever the user logs in or out so the correct exercises show.
     componentDidUpdate(prevProps) {
         if (prevProps.profile !== this.props.profile) {
-            if (this.props.profile) {
-                this.resetState();
-            } else {
-                this.setState({ exercises: [] });
-            }
+            this.resetState();
         }
     }
 

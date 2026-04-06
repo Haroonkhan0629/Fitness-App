@@ -3,7 +3,7 @@ import { Button, Form, FormGroup, Input, Label } from "reactstrap";
 
 import axios from "axios";
 
-import { API_URL } from "../constants";
+import { API_URL, CREATE_URL } from "../constants";
 
 class NewExerciseForm extends React.Component {
     // Stores all form fields for creating or editing an exercise.
@@ -32,7 +32,7 @@ class NewExerciseForm extends React.Component {
     // Sends a new exercise to the backend, then refreshes and closes modal.
     createExercise = e => {
         e.preventDefault()
-        axios.post(API_URL, this.state).then(() => {
+        axios.post(CREATE_URL, this.state).then(() => {
             this.props.resetState()
             this.props.toggle()
         })
