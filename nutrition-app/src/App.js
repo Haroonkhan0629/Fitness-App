@@ -5,7 +5,6 @@ import { Routes, Route } from "react-router-dom";
 import Navigation from './components/Navigation';
 import Search from './components/Search';
 import Home from './components/Home';
-import HomeFolders from './components/HomeFolders';
 import Settings from './components/Settings';
 import LoginPage from './components/LoginPage';
 import Bookmarks from './components/Bookmarks';
@@ -128,7 +127,7 @@ const App = () => {
       <Routes>
         <Route path="/login" element={<LoginPage profile={profile} logout={logout} login={login} theme={theme} apiToken={apiToken}/>} />
         <Route path="/settings" element={<Settings profile={profile} theme={theme} setTheme={setTheme}/>} />
-        <Route path="/" element={<Home profile={profile} theme={theme} apiToken={apiToken}/>} />
+        <Route path="/home" element={<Home profile={profile} theme={theme} apiToken={apiToken}/>} />
         <Route path="/search" element={<Search profile={profile} theme={theme} apiToken={apiToken}/>} />
         <Route path="/bookmarks" element={<Bookmarks profile={profile} theme={theme} apiToken={apiToken}/>} />
       </Routes>
