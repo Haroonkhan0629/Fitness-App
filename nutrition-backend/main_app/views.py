@@ -1,41 +1,66 @@
-from rest_framework.response import Response
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework import status 
+import json
+from pathlib import Path
+
+from django.contrib.auth.models import User
 from django.views.decorators.csrf import ensure_csrf_cookie
+from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from .models import Exercise
 from .serializers import *
-from rest_framework.decorators import APIView
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from django.contrib.auth.models import User
+
+
+def _load_exercise_templates_from_json():
+    # Read starter exercises from exercise.json for public (logged-out) browsing.
+    json_path = Path(__file__).resolve().parent.parent / "exercise.json"
+    with json_path.open("r", encoding="utf-8") as file_obj:
+        template_items = json.load(file_obj)
+
+    normalized = []
+    for idx, item in enumerate(template_items, start=1):
+        normalized.append(
+            {
+                "id": -idx,
+                "name": item.get("name", ""),
+                "muscle": item.get("muscle", ""),
+                "difficulty": item.get("difficulty", ""),
+                "description": item.get("description", ""),
+                "image": item.get("image", ""),
+                "saved": bool(item.get("saved", False)),
+            }
+        )
+    return normalized
 
 @ensure_csrf_cookie
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def exercise_list(request):
-    # Logged-out users see template exercises; logged-in users see their own.
+    # Logged-out users read from exercise.json; logged-in users read only their own rows.
     if request.user.is_authenticated:
         data = Exercise.objects.filter(owner=request.user)
 
-        # First-time users receive a personal copy of starter template exercises.
+        # First-time users receive a personal copy of starter template exercises from JSON.
         if not data.exists():
-            templates = Exercise.objects.filter(owner__isnull=True)
+            templates = _load_exercise_templates_from_json()
             for template in templates:
                 Exercise.objects.create(
-                    name=template.name,
-                    muscle=template.muscle,
-                    difficulty=template.difficulty,
-                    description=template.description,
-                    image=template.image,
-                    saved=template.saved,
+                    name=template["name"],
+                    muscle=template["muscle"],
+                    difficulty=template["difficulty"],
+                    description=template["description"],
+                    image=template["image"],
+                    saved=template["saved"],
                     owner=request.user,
                 )
             data = Exercise.objects.filter(owner=request.user)
-    else:
-        data = Exercise.objects.filter(owner__isnull=True)
 
-    serializer = ExerciseSerializer(data, context={'request': request}, many=True)
-    return Response(serializer.data)
+        serializer = ExerciseSerializer(data, context={'request': request}, many=True)
+        return Response(serializer.data)
+
+    return Response(_load_exercise_templates_from_json())
 
 @ensure_csrf_cookie
 @api_view(['POST'])
