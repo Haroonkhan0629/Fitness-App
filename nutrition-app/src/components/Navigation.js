@@ -24,7 +24,7 @@ const tabs = [{
 }, {
   route: "/settings",
   icon: faGear,
-  label: "Setting"
+  label: "Settings"
 }]
 
 const Navigation = ({ profile }) => {

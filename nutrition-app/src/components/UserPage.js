@@ -4,44 +4,21 @@ import axios from 'axios';
 import { Table } from "reactstrap";
 import { AUTH_BASE_URL } from '../constants';
 
-function UserPage({ profile, logout, theme }) {
-
-  // Stores API token received from backend login.
-  const [token, setToken] = useState(null);
+function UserPage({ profile, logout, theme, apiToken }) {
   // Stores welcome message returned by protected endpoint.
   const [data, setData] = useState(null);
 
-  // Logs in to backend after a short delay and saves auth token.
-  useEffect(() => {
-    if (!profile) {
-      return;
-    }
-
-    const delay = 3000;
-
-    const credentials = {
-      username: profile['id'],
-      password: 'random123'
-    };
-
-    const timeout = setTimeout(() => {
-      axios.post(`${AUTH_BASE_URL}login/`, credentials)
-        .then((response) => {
-          console.log(response['data']);
-          setToken(response['data']['token']);
-        });
-    }, delay);
-
-    return () => clearTimeout(timeout);
-  }, [profile]);
-
   // Uses saved token to call a protected endpoint.
   useEffect(() => {
+    if (!apiToken) {
+      setData(null);
+      return;
+    }
 
     axios.get(`${AUTH_BASE_URL}hello/`, {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Token ' + token
+        'Authorization': 'Token ' + apiToken
       }
     }).then((response) => {
       console.log(response['data']);
@@ -50,7 +27,7 @@ function UserPage({ profile, logout, theme }) {
       console.log(error);
     }
     );
-  }, [token]);
+  }, [apiToken]);
 
   if (theme === 'light') {
     return (

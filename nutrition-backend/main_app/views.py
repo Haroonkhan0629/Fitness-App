@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status 
 from django.views.decorators.csrf import ensure_csrf_cookie
 from .models import Exercise
@@ -11,10 +11,26 @@ from django.contrib.auth.models import User
 
 @ensure_csrf_cookie
 @api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
 def exercise_list(request):
-    # Returns all exercises or creates a new exercise.
+    # Returns only the signed-in user's exercises or creates one for that user.
     if request.method == 'GET':
-        data = Exercise.objects.all()
+        data = Exercise.objects.filter(owner=request.user)
+
+        # First-time users receive a personal copy of starter template exercises.
+        if not data.exists():
+            templates = Exercise.objects.filter(owner__isnull=True)
+            for template in templates:
+                Exercise.objects.create(
+                    name=template.name,
+                    muscle=template.muscle,
+                    difficulty=template.difficulty,
+                    description=template.description,
+                    image=template.image,
+                    saved=template.saved,
+                    owner=request.user,
+                )
+            data = Exercise.objects.filter(owner=request.user)
 
         serializer = ExerciseSerializer(data, context={'request': request}, many=True)
 
@@ -23,17 +39,18 @@ def exercise_list(request):
     elif request.method == 'POST':
         serializer = ExerciseSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(owner=request.user)
             return Response(status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @ensure_csrf_cookie
 @api_view(['PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
 def exercise_detail(request, pk):
-    # Updates or deletes a single exercise by ID.
+    # Updates or deletes a single exercise owned by the signed-in user.
     try:
-        exercise = Exercise.objects.get(pk=pk)
+        exercise = Exercise.objects.get(pk=pk, owner=request.user)
     
         if request.method == 'PUT':
             serializer = ExerciseSerializer(exercise, data=request.data, context={'request': request})
@@ -51,25 +68,16 @@ def exercise_detail(request, pk):
     
 @ensure_csrf_cookie
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def exercise_bookmark(request, pk):
-    # Toggles the saved status (bookmarks/unbookmarks) for an exercise.
+    # Toggles bookmark status for an exercise owned by the signed-in user.
     try:
-        exercise = Exercise.objects.get(pk=pk)
+        exercise = Exercise.objects.get(pk=pk, owner=request.user)
 
         if request.method == 'PUT':
-            # Save the exercise if not already saved.
-            if (exercise.saved == False):
-                serializer = ExerciseSerializer(exercise, data={"name": exercise.name, "muscle": exercise.muscle, "difficulty": exercise.difficulty, "description": exercise.description, "image": exercise.image, "saved": True}, context={'request': request})
-                if serializer.is_valid():
-                    serializer.save()
-                    return Response(status=status.HTTP_204_NO_CONTENT)
-                # Unsave the exercise if already saved.
-            elif (exercise.saved == True):
-                serializer = ExerciseSerializer(exercise, data={"name": exercise.name, "muscle": exercise.muscle, "difficulty": exercise.difficulty, "description": exercise.description, "image": exercise.image, "saved": False}, context={'request': request})
-                if serializer.is_valid():
-                    serializer.save()
-                    return Response(status=status.HTTP_204_NO_CONTENT)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            exercise.saved = not exercise.saved
+            exercise.save(update_fields=['saved'])
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
 
     except Exercise.DoesNotExist:

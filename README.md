@@ -140,6 +140,10 @@ Moving folders on your local machine does not ruin branches.
 - You still have two separate repositories (frontend and backend)
 - Deployments continue based on whichever repo/branch Netlify and Render track
 
+## User Data Ownership
+
+Exercise items are user-specific. When a user signs in, their create, edit, delete, and bookmark actions apply only to their own records. These records are stored and persisted for that individual account, so one user's changes do not modify another user's data.
+
 ## Summary
 
 Built a mobile-first fitness web application where users can browse, search, create, edit, delete, and bookmark exercise records. The frontend is a React app styled with Bootstrap and secured with Google OAuth, served through Netlify. The backend is a Django REST API with token-based authentication, connected to a SQLite database locally and PostgreSQL in production on Render.

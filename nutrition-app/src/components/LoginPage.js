@@ -1,7 +1,7 @@
 import React from "react";
 import UserPage from "./UserPage";
 
-function LoginPage({ profile, login, logout, theme }) {
+function LoginPage({ profile, login, logout, theme, apiToken }) {
   const hasGoogleClientId = Boolean((process.env.REACT_APP_CLIENT_ID || '').trim());
 
   // If signed in, show user information; otherwise show Google sign-in button.
@@ -9,7 +9,7 @@ function LoginPage({ profile, login, logout, theme }) {
         <div>
         {profile ? (
           <div>
-            <UserPage profile={profile} logout={logout} theme={theme}/>
+            <UserPage profile={profile} logout={logout} theme={theme} apiToken={apiToken}/>
           </div>
         ) : (
             <div className="login-container">

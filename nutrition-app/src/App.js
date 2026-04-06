@@ -23,6 +23,8 @@ const App = () => {
   });
   // Controls light or dark color mode.
   const [theme, setTheme] = useState('light');
+  // Stores backend API token used for user-scoped CRUD operations.
+  const [apiToken, setApiToken] = useState(() => localStorage.getItem('fit2go_token'));
 
   // Starts Google sign-in and saves the returned access data.
   const login = useGoogleLogin({
@@ -78,14 +80,38 @@ const App = () => {
           console.log(error);
         }
       );
+
+      axios.post(`${AUTH_BASE_URL}login/`, { username: profile['id'], password: 'random123' }).then(
+        (response) => {
+          const token = response?.data?.token;
+          if (token) {
+            setApiToken(token);
+            localStorage.setItem('fit2go_token', token);
+          }
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     }
   }, [profile]);
+
+  // Keep axios auth header synchronized with the saved backend token.
+  useEffect(() => {
+    if (apiToken) {
+      axios.defaults.headers.common['Authorization'] = `Token ${apiToken}`;
+    } else {
+      delete axios.defaults.headers.common['Authorization'];
+    }
+  }, [apiToken]);
 
   // Signs out from Google and clears local profile data.
   const logout = () => {
     googleLogout();
     setProfile(null);
+    setApiToken(null);
     localStorage.removeItem('fit2go_profile');
+    localStorage.removeItem('fit2go_token');
   };
 
   if (profile) {
@@ -97,7 +123,7 @@ const App = () => {
     <div>
       <Navigation profile={profile} />
       <Routes>
-        <Route path="/login" element={<LoginPage profile={profile} logout={logout} login={login} theme={theme}/>} />
+        <Route path="/login" element={<LoginPage profile={profile} logout={logout} login={login} theme={theme} apiToken={apiToken}/>} />
         <Route path="/settings" element={<Settings profile={profile} theme={theme} setTheme={setTheme}/>} />
         <Route path="/home" element={<Home profile={profile} theme={theme}/>} />
         <Route path="/" element={<HomeFolders theme={theme}/>} />
