@@ -19,8 +19,9 @@ def _load_exercise_templates_from_json():
     with json_path.open("r", encoding="utf-8") as file_obj:
         template_items = json.load(file_obj)
 
+    sorted_items = sorted(template_items, key=lambda x: x.get("name", "").lower())
     normalized = []
-    for idx, item in enumerate(template_items, start=1):
+    for idx, item in enumerate(sorted_items, start=1):
         normalized.append(
             {
                 "id": -idx,
@@ -55,7 +56,7 @@ def exercise_list(request):
         if not request.user.is_authenticated:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-        data = Exercise.objects.filter(owner=request.user)
+        data = Exercise.objects.filter(owner=request.user).order_by('name')
 
         # First-time users receive a personal copy of starter template exercises from JSON.
         if not data.exists():
@@ -70,7 +71,7 @@ def exercise_list(request):
                     saved=template["saved"],
                     owner=request.user,
                 )
-            data = Exercise.objects.filter(owner=request.user)
+            data = Exercise.objects.filter(owner=request.user).order_by('name')
 
         serializer = ExerciseSerializer(data, context={'request': request}, many=True)
         return Response(serializer.data)

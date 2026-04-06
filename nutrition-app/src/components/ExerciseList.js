@@ -34,6 +34,7 @@ class ExerciseList extends Component {
                                             <td> <DetailModal
                                                 exercise={exercise}
                                                 profile={profile}
+                                                resetState={this.props.resetState}
                                                 apiToken={this.props.apiToken}
                                                 theme={theme}
                                             /></td>
@@ -83,6 +84,7 @@ class ExerciseList extends Component {
                                             <td> <DetailModal
                                                 exercise={exercise}
                                                 profile={profile}
+                                                resetState={this.props.resetState}
                                                 apiToken={this.props.apiToken}
                                                 theme={theme}
                                             /></td>

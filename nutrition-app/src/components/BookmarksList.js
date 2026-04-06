@@ -24,6 +24,7 @@ class BookmarksList extends Component {
                                     <td> <DetailModal
                                         exercise={bookmark}
                                         profile={this.props.profile}
+                                        resetState={this.props.resetState}
                                         apiToken={this.props.apiToken}
                                         theme={theme}
                                     /></td>
@@ -51,6 +52,7 @@ class BookmarksList extends Component {
                                     <td> <DetailModal
                                         exercise={bookmark}
                                         profile={this.props.profile}
+                                        resetState={this.props.resetState}
                                         apiToken={this.props.apiToken}
                                         theme={theme}
                                     /></td>
