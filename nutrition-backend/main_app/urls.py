@@ -6,7 +6,6 @@ from . import views
 
 urlpatterns = [
     path('main_app/', views.exercise_list),
-    path('main_app/create/', views.exercise_create),
     path('main_app/<int:pk>/', views.exercise_detail),
     path('main_app/<int:pk>/bookmarks/', views.exercise_bookmark),
     path("auth/hello/", greeting.as_view(), name="greeting"),

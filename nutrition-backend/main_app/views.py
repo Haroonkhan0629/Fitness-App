@@ -79,17 +79,6 @@ def exercise_list(request):
     return Response(_load_exercise_templates_from_json())
 
 @ensure_csrf_cookie
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def exercise_create(request):
-    # Creates a new exercise owned by the signed-in user.
-    serializer = ExerciseSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save(owner=request.user)
-        return Response(status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-@ensure_csrf_cookie
 @api_view(['PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def exercise_detail(request, pk):
