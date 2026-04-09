@@ -52,6 +52,16 @@ When testing on desktop browsers, use the Inspect popup and switch to mobile mod
 4. Pick a mobile device from the top dropdown (for example iPhone or Pixel).
 5. Refresh the page and continue testing in mobile view.
 
+## Key Features
+
+- Browse and search a library of exercises by name
+- Create, edit, and delete your own custom exercise records
+- Bookmark exercises for quick access later
+- Sign in with Google — no separate account or password needed
+- User-specific data — your records are private and only visible to you
+- Mobile-first design — built and optimised for use on a phone screen
+- Data persists between sessions — your exercises and bookmarks are saved to a database
+
 ## Prerequisites
 
 Install before setup:
@@ -122,29 +132,91 @@ Frontend runs at `http://localhost:3000`.
 - Switch to mobile viewport in inspect mode
 - Confirm exercise list loads from API
 
-## Deployment Notes
+---
 
-- Frontend: Netlify
-  - Build command: `npm run build`
-  - Publish directory: `build`
-  - Env var: `REACT_APP_BACKEND_URL=<render-backend-url>`
-- Backend: Render
-  - Build command: `./build.sh`
-  - Start command: `gunicorn nutrition_app.wsgi:application`
-  - Use PostgreSQL in production
+## Deploying the App (Public)
 
-## Git and Branching Impact
+The app has two parts that each need to be deployed separately: the **backend** on Render and the **frontend** on Netlify.
 
-Moving folders on your local machine does not ruin branches.
+### Prerequisites
 
-- Branch history stays intact inside each repository's `.git` folder
-- Remotes and existing branches still work as normal
-- You still have two separate repositories (frontend and backend)
-- Deployments continue based on whichever repo/branch Netlify and Render track
+- Both `nutrition-app/` and `nutrition-backend/` pushed to a GitHub repository
+- A free [Render](https://render.com) account
+- A free [Netlify](https://app.netlify.com) account
 
-## User Data Ownership
+### 1. Deploy the Backend on Render
 
-Exercise items are user-specific. When a user signs in, their create, edit, delete, and bookmark actions apply only to their own records. These records are stored and persisted for that individual account, so one user's changes do not modify another user's data.
+- Go to [render.com](https://render.com) and sign in
+- Click **New** → **Web Service**
+- Connect your GitHub account and select your repository
+- If the repo contains both folders, set the **Root Directory** to `nutrition-backend`
+- Configure the service:
+  - **Build command:** `./build.sh`
+  - **Start command:** `gunicorn nutrition_app.wsgi:application`
+  - **Environment:** Python
+- Under **Environment Variables**, add:
+  - `SECRET_KEY` — a long random string used by Django for security
+  - `DEBUG` — set to `False`
+  - `ALLOWED_HOSTS` — your Render URL (e.g. `your-app.onrender.com`)
+- Click **Create Web Service** and wait for the build to finish
+- Copy your backend URL — you will need it in the next step
+
+### 2. Deploy the Frontend on Netlify
+
+- Go to [app.netlify.com](https://app.netlify.com)
+- Click **Add new site** → **Import an existing project** → **GitHub**
+- Select your repository
+- If the repo contains both folders, set the **Base directory** to `nutrition-app`
+- Configure the build:
+  - **Build command:** `npm run build`
+  - **Publish directory:** `build`
+- Under **Environment Variables**, add:
+  - `REACT_APP_BACKEND_URL` — set to your Render backend URL from step 1
+- Click **Deploy site**
+
+### 3. Open the Live App
+
+- Your app will be live at your Netlify URL (e.g. `https://fit2go-pro.netlify.app`)
+- Open it in a mobile browser, or use Chrome's mobile viewport in Inspect mode (see Mobile App Notice above)
+
+---
+
+## User Data and Privacy
+
+Exercise items are user-specific. When a user signs in with Google, their created exercises and bookmarks are linked only to their account. One user's data is completely separate from another user's — no one can see or edit records that do not belong to them.
+
+## Troubleshooting
+
+- **Exercise list does not load**
+  - Confirm the backend is running locally at `http://localhost:8000`, or check your Render deployment logs
+  - Confirm `REACT_APP_BACKEND_URL` is set correctly in `.env.local` (local) or in Netlify environment variables (deployed)
+- **Google login fails**
+  - Ensure your Google OAuth credentials include the correct authorised redirect URIs for your environment
+- **Backend migration errors on startup**
+  - Run `python manage.py migrate` to apply any pending database migrations
+- **`npm install` fails**
+  - Confirm Node.js 18+ is installed: `node -v`
+- **Port already in use**
+  - Stop any existing process on port 8000 (backend) or 3000 (frontend) before starting again
+
+## Project Structure
+
+```text
+Fitness-App/
+  nutrition-app/
+    public/
+    src/
+      components/
+      constants/
+      App.js
+    package.json
+  nutrition-backend/
+    main_app/
+    nutrition_app/
+    manage.py
+    requirements.txt
+    build.sh
+```
 
 ## Summary
 
