@@ -4,6 +4,14 @@ Unified project workspace containing the Fit2Go mobile web frontend and the Djan
 
 **Live app:** [https://fit2go-pro.netlify.app/](https://fit2go-pro.netlify.app/)
 
+## Screenshots
+
+> Add screenshots to a `screenshots/` folder in this repo, then update the paths below.
+
+![Home screen](screenshots/home.png)
+![Exercise search](screenshots/search.png)
+![Bookmarks](screenshots/bookmarks.png)
+
 ## Project Components
 
 - `nutrition-app/` -> frontend repository (React mobile web app)
@@ -13,32 +21,32 @@ Unified project workspace containing the Fit2Go mobile web frontend and the Djan
 
 ### Frontend
 
-- JavaScript (ES6+)
-- React 18
-- React Router DOM
-- Axios
-- Bootstrap and Reactstrap
-- Google OAuth
-- Node.js and npm
-- Netlify (deployment)
+- **JavaScript (ES6+)** — the programming language the frontend is written in
+- **React 18** — a JavaScript library for building the user interface and managing page state
+- **React Router DOM** — handles navigation between different pages without reloading the browser
+- **Axios** — used to send HTTP requests from the frontend to the backend API
+- **Bootstrap and Reactstrap** — pre-built styling components for a consistent mobile-friendly layout
+- **Google OAuth** — allows users to sign in with their Google account instead of creating a separate password
+- **Node.js and npm** — required to run and build the React app locally
+- **Netlify** — hosts and serves the frontend publicly
 
 ### Backend
 
-- Python 3.11+
-- Django 4.2
-- Django REST Framework
-- Token Authentication (DRF auth token)
-- django-cors-headers
-- WhiteNoise
-- Gunicorn
-- SQLite (local development)
-- PostgreSQL (production)
-- Render (deployment)
+- **Python 3.11+** — the programming language the backend is written in
+- **Django 4.2** — a Python web framework that handles routing, logic, and the database layer
+- **Django REST Framework** — extends Django to build a JSON API that the frontend communicates with
+- **Token Authentication (DRF auth token)** — secures the API so only logged-in users can access their data
+- **django-cors-headers** — allows the frontend (on a different domain) to communicate with the backend
+- **WhiteNoise** — serves static files efficiently in production without a separate file server
+- **Gunicorn** — a production-grade web server that runs the Django app on Render
+- **SQLite** — a lightweight database used during local development (no setup required)
+- **PostgreSQL** — a more robust database used in production on Render
+- **Render** — hosts and runs the backend API publicly
 
 ### General
 
-- Git and GitHub
-- VS Code
+- **Git and GitHub** — version control and remote code storage
+- **VS Code** — code editor used during development
 
 ## Mobile App Notice
 
