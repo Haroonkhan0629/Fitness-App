@@ -1,6 +1,8 @@
 # Fitness App 
 
-Unified project workspace containing the Fit2Go mobile web frontend and the Django REST backend. Public Link: https://fit2go-pro.netlify.app/
+Unified project workspace containing the Fit2Go mobile web frontend and the Django REST backend. 
+
+**Live app:** [https://fit2go-pro.netlify.app/](https://fit2go-pro.netlify.app/)
 
 ## Project Components
 
