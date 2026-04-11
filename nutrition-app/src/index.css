@@ -271,6 +271,17 @@ li {
   width: 100%;
 }
 
+@media (min-width: 992px) {
+  .input-wrapper {
+    top: 56px;
+  }
+
+  .results {
+    top: calc(56px + 3.5rem);
+    margin-top: 0;
+  }
+}
+
 .results {
   background-color: white;
   display: flex;
