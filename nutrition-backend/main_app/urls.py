@@ -1,7 +1,6 @@
 from django.urls import path
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .views import greeting, RegisterNewUser
-from django.urls import path
-from rest_framework.authtoken.views import obtain_auth_token
 from . import views
 
 urlpatterns = [
@@ -10,5 +9,6 @@ urlpatterns = [
     path('main_app/<int:pk>/bookmarks/', views.exercise_bookmark),
     path("auth/hello/", greeting.as_view(), name="greeting"),
     path("auth/register/", RegisterNewUser.as_view(), name="register"),
-    path("auth/login/", obtain_auth_token, name="create_token"),
+    path("auth/login/", TokenObtainPairView.as_view(), name="token_obtain"),
+    path("auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
 ]

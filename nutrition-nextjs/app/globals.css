@@ -1,0 +1,210 @@
+/* ── Navigation ── */
+.bottom-nav-link,
+.nav-link {
+  color: #55575b !important;
+  margin-right: 0;
+}
+
+.bottom-nav-link.active {
+  color: #922c88 !important;
+}
+
+.bottom-tab-nav .nav-item {
+  flex: 1;
+}
+
+.bottom-tab-nav .bottom-nav-link {
+  width: 100%;
+  padding: 6px 2px;
+  text-align: center;
+}
+
+.bottom-tab-nav .bottom-tab-label {
+  font-size: 11px;
+  line-height: 1.1;
+}
+
+/* ── Theme toggle switch ── */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: '';
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #2196f3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196f3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+/* ── Misc UI ── */
+.create-button {
+  margin-bottom: 100px;
+}
+
+.logout {
+  padding: 10px 20px;
+  background-color: #61dafb;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.profile-img {
+  border-radius: 50px;
+}
+
+.table-margin {
+  margin-bottom: 100px;
+}
+
+.exercise-image {
+  border-radius: 10px;
+}
+
+/* ── Search ── */
+.input-wrapper {
+  background-color: white;
+  width: 100%;
+  border-radius: 10px;
+  height: 2.5rem;
+  padding: 0 15px;
+  box-shadow: 0px 0px 8px #dfe1e5;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  background-color: transparent;
+  border: none;
+  height: 100%;
+  font-size: 1.25rem;
+  width: 100%;
+  margin-left: 5px;
+}
+
+.search-input:focus {
+  outline: none;
+}
+
+/* ── Dark theme ── */
+.dark {
+  background-color: #333;
+  color: #fff;
+}
+
+.dark .bottom-tab-nav {
+  border-top: solid 1px #222020;
+  box-shadow: inset 0px 11px 8px -20px #232323, inset 0px -15px 35px -2px #262525;
+}
+
+.dark nav {
+  background-color: rgb(38, 36, 36);
+  color: #fff;
+}
+
+.dark .input-wrapper {
+  background-color: #222020;
+  box-shadow: 0px 0px 8px rgb(0, 0, 0);
+}
+
+.dark .results {
+  background-color: #333;
+}
+
+.dark .search-input {
+  color: whitesmoke;
+}
+
+.dark .result-link {
+  color: whitesmoke;
+}
+
+.dark .view-button {
+  background-color: #333;
+  color: whitesmoke;
+  border: none;
+}
+
+.dark li {
+  color: whitesmoke;
+}
+
+.dark .bottom-nav-link,
+.dark .nav-link {
+  color: #a7aebb !important;
+}
+
+/* ── Login ── */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.login-button {
+  padding: 10px 20px;
+  background-color: #4285f4;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #357ae8;
+}

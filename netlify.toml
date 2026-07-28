@@ -1,9 +1,7 @@
 [build]
-  base = "nutrition-app"
+  base = "nutrition-nextjs"
   command = "npm run build"
-  publish = "build"
+  publish = ".next"
 
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
