@@ -45,7 +45,9 @@ export default function Home() {
         apiToken={apiToken}
         theme={theme}
       />
-      <NewExerciseModal create={true} resetState={resetState} apiToken={apiToken} theme={theme} />
+      {profile && (
+        <NewExerciseModal create={true} resetState={resetState} apiToken={apiToken} theme={theme} />
+      )}
     </div>
   );
 }
