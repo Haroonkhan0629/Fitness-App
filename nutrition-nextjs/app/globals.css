@@ -9,6 +9,11 @@
   color: #922c88 !important;
 }
 
+.dark .bottom-nav-link.active,
+.dark .nav-link.active {
+  color: #922c88 !important;
+}
+
 .bottom-tab-nav .nav-item {
   flex: 1;
 }
