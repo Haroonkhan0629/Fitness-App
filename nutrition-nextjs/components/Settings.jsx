@@ -22,7 +22,7 @@ export default function Settings() {
       <Table {...{ [tableVariant]: true }}>
         <tbody>
           <tr>
-            <td>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</td>
+            <td>Dark Mode</td>
             <td align="center">
               <ThemeToggle theme={theme} setTheme={setTheme} />
             </td>

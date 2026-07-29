@@ -20,7 +20,7 @@ export default function RootLayout({ children }) {
       <body>
         <Providers>
           <Navigation />
-          <main>{children}</main>
+          <main style={{ paddingBottom: '80px' }}>{children}</main>
         </Providers>
       </body>
     </html>

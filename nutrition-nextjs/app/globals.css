@@ -1,4 +1,9 @@
 /* ── Navigation ── */
+.top-nav {
+  background-color: #fff;
+  border-bottom: 1px solid #e9ecef;
+}
+
 .bottom-nav-link,
 .nav-link {
   color: #55575b !important;
@@ -163,6 +168,10 @@ input:checked + .slider:before {
 .dark nav {
   background-color: rgb(38, 36, 36);
   color: #fff;
+}
+
+.dark .top-nav {
+  border-bottom: 1px solid #1a1a1a;
 }
 
 .dark .input-wrapper {
