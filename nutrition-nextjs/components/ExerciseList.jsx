@@ -5,7 +5,7 @@ import NewExerciseModal from './NewExerciseModal';
 import ConfirmRemovalModal from './ConfirmRemovalModal';
 import DetailModal from './DetailModal';
 
-export default function ExerciseList({ exercises, profile, resetState, apiToken, theme }) {
+export default function ExerciseList({ exercises, profile, resetState, theme }) {
   const tableVariant = theme === 'dark' ? 'dark' : 'light';
 
   return (
@@ -29,7 +29,6 @@ export default function ExerciseList({ exercises, profile, resetState, apiToken,
                     exercise={exercise}
                     profile={profile}
                     resetState={resetState}
-                    apiToken={apiToken}
                     theme={theme}
                   />
                 </td>
@@ -39,14 +38,12 @@ export default function ExerciseList({ exercises, profile, resetState, apiToken,
                       create={false}
                       exercise={exercise}
                       resetState={resetState}
-                      apiToken={apiToken}
                       theme={theme}
                     />
                     &nbsp;&nbsp;
                     <ConfirmRemovalModal
                       id={exercise.id}
                       resetState={resetState}
-                      apiToken={apiToken}
                       theme={theme}
                     />
                   </td>

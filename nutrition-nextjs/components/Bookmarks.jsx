@@ -3,26 +3,22 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/auth';
 import BookmarksList from './BookmarksList';
-import axios from 'axios';
-import { API_URL } from '@/constants';
+import { getExercises } from '@/app/actions';
 
 export default function Bookmarks() {
-  const { profile, apiToken, theme } = useAuth();
+  const { profile, isLoggedIn, theme } = useAuth();
   const [exercises, setExercises] = useState([]);
 
-  const getExercises = () => {
-    const config = apiToken
-      ? { headers: { Authorization: `Bearer ${apiToken}` }, params: { mine: 1 } }
-      : {};
-    axios.get(API_URL, config).then((res) => setExercises(res.data));
+  const loadExercises = () => {
+    getExercises(isLoggedIn).then(setExercises).catch(console.error);
   };
 
-  const resetState = () => getExercises();
+  const resetState = () => loadExercises();
 
   useEffect(() => {
-    getExercises();
+    loadExercises();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiToken]);
+  }, [isLoggedIn]);
 
   if (!profile) {
     return <p style={{ padding: '1rem' }}>Please log in to view your saved exercises.</p>;
@@ -44,7 +40,6 @@ export default function Bookmarks() {
         exercises={exercises}
         resetState={resetState}
         profile={profile}
-        apiToken={apiToken}
         theme={theme}
       />
     </div>

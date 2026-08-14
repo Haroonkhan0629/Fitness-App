@@ -1,16 +1,14 @@
 'use client';
 
 import { Button } from 'reactstrap';
-import axios from 'axios';
-import { API_URL } from '@/constants';
+import { toggleBookmark } from '@/app/actions';
 
-export default function DetailView({ exercise, profile, resetState, toggle, apiToken }) {
+export default function DetailView({ exercise, profile, resetState, toggle }) {
   const toggleSave = (e) => {
     e.preventDefault();
-    const config = apiToken ? { headers: { Authorization: `Bearer ${apiToken}` } } : {};
-    axios.put(`${API_URL}${exercise.id}/bookmarks/`, {}, config).then(() => {
+    toggleBookmark(exercise.id).then(() => {
       if (resetState) resetState();
-    });
+    }).catch(console.error);
   };
 
   return (

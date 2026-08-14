@@ -24,7 +24,7 @@ Unified project workspace containing the Fit2Go mobile web frontend and the Djan
 - **JavaScript (ES6+)** — the programming language the frontend is written in
 - **Next.js 14** — React framework that provides file-based routing, server-side pre-rendering, and automatic code splitting per route
 - **React 18** — the underlying UI library used by Next.js for component rendering and state management
-- **Axios** — sends HTTP requests from the browser directly to the backend API
+- **Next.js Server Actions** — server-side functions that proxy all API calls to the Django backend; the browser never contacts Django directly
 - **Bootstrap and Reactstrap** — pre-built styling components for a consistent mobile-friendly layout
 - **Google OAuth (`@react-oauth/google`)** — allows users to sign in with their Google account instead of creating a separate password
 - **Node.js and npm** — required to run and build the Next.js app locally
@@ -50,13 +50,14 @@ Unified project workspace containing the Fit2Go mobile web frontend and the Djan
 
 ## Authentication
 
-Fit2Go uses **JWT (JSON Web Token)** authentication:
+Fit2Go uses **JWT (JSON Web Token)** authentication with **HTTP-only cookies**:
 
-- On sign-in, Django issues two tokens: a short-lived **access token** (15 minutes) and a long-lived **refresh token** (7 days)
-- Both tokens are stored in `localStorage` on the client — no cookies, no server-side sessions
-- Every API request carries `Authorization: Bearer <access_token>` in the header; Django verifies the token signature using `SECRET_KEY` with no database lookup
-- When the access token expires, an axios interceptor automatically calls `/api/auth/token/refresh/` and retries the original request — the user never sees an expiry prompt
-- When the refresh token expires (after 7 days of inactivity) the user is silently logged out and redirected to the login screen
+- On sign-in, the Next.js server calls Django, receives the token pair, and stores both as **HTTP-only cookies** — the access token (`fit2go_access`, 5 min) and the refresh token (`fit2go_refresh`, 7 days)
+- Cookies are invisible to browser JavaScript, protecting tokens from XSS attacks
+- Every server action reads `fit2go_access` from the cookie store server-side and forwards it as `Authorization: Bearer <token>` to Django — no token is ever exposed in the browser's network tab
+- When a server action receives a 401, it silently calls `/api/auth/token/refresh/`, stores the new access cookie, and retries the original request — all on the server, transparent to the user
+- When the refresh token expires (after 7 days of inactivity) the server action throws and the user is prompted to sign in again
+- The user's **profile** (name, picture, email) is stored in `localStorage` and distributed across components via React Context — it is not sensitive and is used only for UI rendering
 
 ## Mobile App Notice
 
@@ -132,7 +133,7 @@ npm install
 Create `.env.local` with:
 
 ```env
-NEXT_PUBLIC_BACKEND_URL=http://localhost:8000
+NEXT_PUBLIC_BACKEND_URL=your-public-backend
 NEXT_PUBLIC_CLIENT_ID=your-google-oauth-client-id
 ```
 

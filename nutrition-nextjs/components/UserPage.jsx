@@ -2,27 +2,20 @@
 
 import { useState, useEffect } from 'react';
 import { Table } from 'reactstrap';
-import axios from 'axios';
-import { AUTH_BASE_URL } from '@/constants';
+import { getUserHello } from '@/app/actions';
 
-export default function UserPage({ profile, logout, theme, apiToken }) {
+export default function UserPage({ profile, logout, theme }) {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    if (!apiToken) {
+    if (!profile) {
       setData(null);
       return;
     }
-    axios
-      .get(`${AUTH_BASE_URL}hello/`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${apiToken}`,
-        },
-      })
-      .then((response) => setData(response.data?.message))
-      .catch((error) => console.log(error));
-  }, [apiToken]);
+    getUserHello()
+      .then((res) => setData(res?.message))
+      .catch(console.error);
+  }, [profile]);
 
   const tableVariant = theme === 'dark' ? 'dark' : 'light';
   const breadcrumb =

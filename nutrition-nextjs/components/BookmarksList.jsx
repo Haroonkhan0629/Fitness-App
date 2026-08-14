@@ -3,7 +3,7 @@
 import { Table } from 'reactstrap';
 import DetailModal from './DetailModal';
 
-export default function BookmarksList({ exercises, profile, resetState, apiToken, theme }) {
+export default function BookmarksList({ exercises, profile, resetState, theme }) {
   const bookmarked = exercises.filter((exercise) => exercise.saved === true);
   const tableVariant = theme === 'dark' ? 'dark' : 'light';
 
@@ -23,7 +23,6 @@ export default function BookmarksList({ exercises, profile, resetState, apiToken
                   exercise={bookmark}
                   profile={profile}
                   resetState={resetState}
-                  apiToken={apiToken}
                   theme={theme}
                 />
               </td>

@@ -4,7 +4,7 @@ import { useState, Fragment } from 'react';
 import { Button, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import NewExerciseForm from './NewExerciseForm';
 
-export default function NewExerciseModal({ create, exercise, resetState, apiToken, theme }) {
+export default function NewExerciseModal({ create, exercise, resetState, theme }) {
   const [modal, setModal] = useState(false);
   const toggle = () => setModal((prev) => !prev);
   const isDark = theme === 'dark';
@@ -38,7 +38,6 @@ export default function NewExerciseModal({ create, exercise, resetState, apiToke
             resetState={resetState}
             toggle={toggle}
             exercise={exercise}
-            apiToken={apiToken}
           />
         </ModalBody>
       </Modal>

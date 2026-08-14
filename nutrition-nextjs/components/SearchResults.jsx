@@ -2,7 +2,7 @@
 
 import SearchResult from './SearchResult';
 
-export default function SearchResults({ results, profile, apiToken, theme }) {
+export default function SearchResults({ results, profile, theme }) {
   return (
     <div className="results">
       {results.map((result, id) => (
@@ -10,7 +10,6 @@ export default function SearchResults({ results, profile, apiToken, theme }) {
           key={id}
           result={result}
           profile={profile}
-          apiToken={apiToken}
           theme={theme}
         />
       ))}

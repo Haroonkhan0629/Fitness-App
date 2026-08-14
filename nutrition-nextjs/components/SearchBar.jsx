@@ -2,31 +2,18 @@
 
 import { useState, useRef } from 'react';
 import { FaSearch } from 'react-icons/fa';
-import axios from 'axios';
-import { API_URL } from '@/constants';
+import { getExercises } from '@/app/actions';
 
-export default function SearchBar({ setResults, apiToken }) {
+export default function SearchBar({ setResults, isLoggedIn }) {
   const [input, setInput] = useState('');
-  const controllerRef = useRef(null);
+  const latestSearchRef = useRef('');
 
   const fetchData = async (searchedValue) => {
-    if (controllerRef.current) {
-      controllerRef.current.abort();
-    }
-    const controller = new AbortController();
-    controllerRef.current = controller;
-
+    latestSearchRef.current = searchedValue;
     try {
-      const config = apiToken
-        ? {
-            headers: { Authorization: `Bearer ${apiToken}` },
-            params: { mine: 1 },
-            signal: controller.signal,
-          }
-        : { signal: controller.signal };
-
-      const response = await axios.get(API_URL, config);
-      const results = response.data.filter(
+      const data = await getExercises(isLoggedIn);
+      if (latestSearchRef.current !== searchedValue) return;
+      const results = data.filter(
         (result) =>
           searchedValue &&
           result &&
@@ -35,9 +22,7 @@ export default function SearchBar({ setResults, apiToken }) {
       );
       setResults(results);
     } catch (err) {
-      if (!axios.isCancel(err)) {
-        console.error('Search error:', err);
-      }
+      console.error('Search error:', err);
     }
   };
 

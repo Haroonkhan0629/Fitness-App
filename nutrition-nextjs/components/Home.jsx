@@ -4,27 +4,23 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/auth';
 import ExerciseList from './ExerciseList';
 import NewExerciseModal from './NewExerciseModal';
-import axios from 'axios';
-import { API_URL } from '@/constants';
+import { getExercises } from '@/app/actions';
 
 export default function Home() {
-  const { profile, apiToken, theme } = useAuth();
+  const { profile, isLoggedIn, theme } = useAuth();
   const [exercises, setExercises] = useState([]);
 
-  const getExercises = () => {
-    const config = apiToken
-      ? { headers: { Authorization: `Bearer ${apiToken}` }, params: { mine: 1 } }
-      : {};
-    axios.get(API_URL, config).then((res) => setExercises(res.data));
+  const loadExercises = () => {
+    getExercises(isLoggedIn).then(setExercises).catch(console.error);
   };
 
-  const resetState = () => getExercises();
+  const resetState = () => loadExercises();
 
   useEffect(() => {
-    getExercises();
+    loadExercises();
   // Re-fetch when login state changes.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiToken]);
+  }, [isLoggedIn]);
 
   const breadcrumb =
     theme === 'light' ? (
@@ -42,11 +38,10 @@ export default function Home() {
         exercises={exercises}
         profile={profile}
         resetState={resetState}
-        apiToken={apiToken}
         theme={theme}
       />
       {profile && (
-        <NewExerciseModal create={true} resetState={resetState} apiToken={apiToken} theme={theme} />
+        <NewExerciseModal create={true} resetState={resetState} theme={theme} />
       )}
     </div>
   );

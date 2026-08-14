@@ -4,7 +4,7 @@ import { useState, Fragment } from 'react';
 import { Button, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import DetailView from './DetailView';
 
-export default function DetailModal({ exercise, profile, resetState, apiToken, theme }) {
+export default function DetailModal({ exercise, profile, resetState, theme }) {
   const [modal, setModal] = useState(false);
   const toggle = () => setModal((prev) => !prev);
 
@@ -30,7 +30,6 @@ export default function DetailModal({ exercise, profile, resetState, apiToken, t
             toggle={toggle}
             exercise={exercise}
             profile={profile}
-            apiToken={apiToken}
           />
         </ModalBody>
       </Modal>

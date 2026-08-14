@@ -2,10 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
-import axios from 'axios';
-import { API_URL } from '@/constants';
+import { createExercise, updateExercise } from '@/app/actions';
 
-export default function NewExerciseForm({ exercise, resetState, toggle, apiToken }) {
+export default function NewExerciseForm({ exercise, resetState, toggle }) {
   const [form, setForm] = useState({
     id: 0,
     name: '',
@@ -24,25 +23,22 @@ export default function NewExerciseForm({ exercise, resetState, toggle, apiToken
 
   const onChange = (e) => setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-  const config = apiToken ? { headers: { Authorization: `Bearer ${apiToken}` } } : {};
-
-  const createExercise = (e) => {
+  const handleCreate = (e) => {
     e.preventDefault();
-    axios
-      .post(API_URL, form, config)
+    createExercise(form)
       .then(() => { resetState(); toggle(); })
-      .catch((error) => console.log('Create exercise failed:', error?.response?.data || error));
+      .catch((error) => console.log('Create exercise failed:', error));
   };
 
-  const editExercise = (e) => {
+  const handleEdit = (e) => {
     e.preventDefault();
-    axios
-      .put(`${API_URL}${form.id}/`, form, config)
-      .then(() => { resetState(); toggle(); });
+    updateExercise(form.id, form)
+      .then(() => { resetState(); toggle(); })
+      .catch(console.error);
   };
 
   return (
-    <Form onSubmit={exercise ? editExercise : createExercise}>
+    <Form onSubmit={exercise ? handleEdit : handleCreate}>
       <FormGroup>
         <Label for="name">Name:</Label>
         <Input type="text" name="name" onChange={onChange} value={form.name} />

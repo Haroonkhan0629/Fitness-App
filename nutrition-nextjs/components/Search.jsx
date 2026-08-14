@@ -6,14 +6,14 @@ import SearchBar from './SearchBar';
 import SearchResults from './SearchResults';
 
 export default function Search() {
-  const { profile, apiToken, theme } = useAuth();
+  const { profile, isLoggedIn, theme } = useAuth();
   const [results, setResults] = useState([]);
 
   return (
     <ul className="navigation">
       <li className="search-bar-container">
-        <SearchBar setResults={setResults} apiToken={apiToken} />
-        <SearchResults results={results} profile={profile} apiToken={apiToken} theme={theme} />
+        <SearchBar setResults={setResults} isLoggedIn={isLoggedIn} />
+        <SearchResults results={results} profile={profile} theme={theme} />
       </li>
     </ul>
   );
