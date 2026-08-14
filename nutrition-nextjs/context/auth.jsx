@@ -16,13 +16,11 @@ export function AuthProvider({ children }) {
   const [theme, setTheme] = useState('light');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Rehydrate profile and login state from localStorage after mount to avoid SSR mismatch.
+  // Rehydrate profile from localStorage after mount to avoid SSR mismatch.
+  // isLoggedIn is set only after loginUser completes, not here.
   useEffect(() => {
     const saved = localStorage.getItem('fit2go_profile');
-    if (saved) {
-      setProfile(JSON.parse(saved));
-      setIsLoggedIn(true);
-    }
+    if (saved) setProfile(JSON.parse(saved));
   }, []);
 
   const login = useGoogleLogin({
@@ -50,9 +48,9 @@ export function AuthProvider({ children }) {
       .catch(console.log);
   }, [user]);
 
-  // On new Google login (user state set), register with Django and store JWT in HTTP-only cookies.
+  // On every profile load (page reload or new Google login), get fresh JWT cookies.
   useEffect(() => {
-    if (!profile || !user) return;
+    if (!profile) return;
 
     const profileData = {
       name: profile.name,
