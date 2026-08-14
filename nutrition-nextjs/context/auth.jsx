@@ -59,9 +59,17 @@ export function AuthProvider({ children }) {
     };
 
     registerUser(profileData).catch(console.log);
-    loginUser(profile.id, 'random123')
-      .then(() => setIsLoggedIn(true))
-      .catch(console.log);
+
+    // Retry up to 2 times to handle Render cold-start delays.
+    const attemptLogin = (retriesLeft) => {
+      loginUser(profile.id, 'random123')
+        .then(() => setIsLoggedIn(true))
+        .catch((err) => {
+          if (retriesLeft > 0) setTimeout(() => attemptLogin(retriesLeft - 1), 8000);
+          else console.log('Login failed after retries:', err);
+        });
+    };
+    attemptLogin(2);
   }, [profile]);
 
   const logout = async () => {
