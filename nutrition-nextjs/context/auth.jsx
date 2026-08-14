@@ -15,6 +15,7 @@ export function AuthProvider({ children }) {
   const [profile, setProfile] = useState(null);
   const [theme, setTheme] = useState('light');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loginStatus, setLoginStatus] = useState('idle'); // 'idle' | 'pending' | 'ok' | 'error'
 
   // Rehydrate profile from localStorage after mount to avoid SSR mismatch.
   // isLoggedIn is set only after loginUser completes, not here.
@@ -62,11 +63,12 @@ export function AuthProvider({ children }) {
 
     // Retry up to 2 times to handle Render cold-start delays.
     const attemptLogin = (retriesLeft) => {
+      setLoginStatus('pending');
       loginUser(profile.id, 'random123')
-        .then(() => setIsLoggedIn(true))
+        .then(() => { setIsLoggedIn(true); setLoginStatus('ok'); })
         .catch((err) => {
           if (retriesLeft > 0) setTimeout(() => attemptLogin(retriesLeft - 1), 8000);
-          else console.log('Login failed after retries:', err);
+          else { setLoginStatus('error:' + err.message); console.log('Login failed after retries:', err); }
         });
     };
     attemptLogin(2);
@@ -76,12 +78,13 @@ export function AuthProvider({ children }) {
     googleLogout();
     await logoutAction();
     setIsLoggedIn(false);
+    setLoginStatus('idle');
     setProfile(null);
     localStorage.removeItem('fit2go_profile');
   };
 
   return (
-    <AuthContext.Provider value={{ profile, isLoggedIn, theme, setTheme, login, logout }}>
+    <AuthContext.Provider value={{ profile, isLoggedIn, loginStatus, theme, setTheme, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
