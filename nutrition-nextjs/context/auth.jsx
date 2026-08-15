@@ -18,14 +18,12 @@ export function AuthProvider({ children }) {
   const [loginStatus, setLoginStatus] = useState('idle'); // 'idle' | 'pending' | 'ok' | 'error'
 
   // Rehydrate profile from localStorage after mount to avoid SSR mismatch.
-  // isLoggedIn is set only after loginUser completes, not here.
   useEffect(() => {
     const saved = localStorage.getItem('fit2go_profile');
     if (saved) {
       setProfile(JSON.parse(saved));
-      // If a valid access cookie already exists, mark as logged in immediately.
-      const hasCookie = document.cookie.split(';').some((c) => c.trim().startsWith('fit2go_access='));
-      if (hasCookie) setIsLoggedIn(true);
+      // Non-sensitive marker set after loginUser succeeds — no token stored here.
+      if (localStorage.getItem('fit2go_has_session') === '1') setIsLoggedIn(true);
     }
   }, []);
 
@@ -70,7 +68,7 @@ export function AuthProvider({ children }) {
     const attemptLogin = (retriesLeft) => {
       setLoginStatus('pending');
       loginUser(profile.id, 'random123')
-        .then(() => { setIsLoggedIn(true); setLoginStatus('ok'); })
+        .then(() => { setIsLoggedIn(true); setLoginStatus('ok'); localStorage.setItem('fit2go_has_session', '1'); })
         .catch((err) => {
           if (retriesLeft > 0) setTimeout(() => attemptLogin(retriesLeft - 1), 8000);
           else { setLoginStatus('error:' + err.message); console.log('Login failed after retries:', err); }
@@ -86,6 +84,7 @@ export function AuthProvider({ children }) {
     setLoginStatus('idle');
     setProfile(null);
     localStorage.removeItem('fit2go_profile');
+    localStorage.removeItem('fit2go_has_session');
   };
 
   return (
