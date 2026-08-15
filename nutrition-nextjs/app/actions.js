@@ -8,7 +8,7 @@ const AUTH_BASE_URL = `${BACKEND_URL}/api/auth/`;
 const TOKEN_REFRESH_URL = `${BACKEND_URL}/api/auth/token/refresh/`;
 
 const COOKIE_OPTS = {
-  httpOnly: false,
+  httpOnly: true,
   secure: process.env.NODE_ENV === 'production',
   sameSite: 'lax',
   path: '/',

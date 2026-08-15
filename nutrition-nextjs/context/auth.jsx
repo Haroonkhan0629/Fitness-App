@@ -15,16 +15,14 @@ export function AuthProvider({ children }) {
   const [profile, setProfile] = useState(null);
   const [theme, setTheme] = useState('light');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loginStatus, setLoginStatus] = useState('idle'); // 'idle' | 'pending' | 'ok' | 'error'
 
   // Rehydrate profile from localStorage after mount to avoid SSR mismatch.
   useEffect(() => {
     const saved = localStorage.getItem('fit2go_profile');
     if (saved) {
       setProfile(JSON.parse(saved));
-      // With httpOnly=false cookies, check if a valid session cookie exists.
-      const hasCookie = document.cookie.split(';').some((c) => c.trim().startsWith('fit2go_access='));
-      if (hasCookie) setIsLoggedIn(true);
+      // Non-sensitive marker set after loginUser succeeds — no token stored here.
+      if (localStorage.getItem('fit2go_has_session') === '1') setIsLoggedIn(true);
     }
   }, []);
 
@@ -67,12 +65,11 @@ export function AuthProvider({ children }) {
 
     // Retry up to 2 times to handle Render cold-start delays.
     const attemptLogin = (retriesLeft) => {
-      setLoginStatus('pending');
       loginUser(profile.id, 'random123')
-        .then(() => { setIsLoggedIn(true); setLoginStatus('ok'); })
+        .then(() => { setIsLoggedIn(true); localStorage.setItem('fit2go_has_session', '1'); })
         .catch((err) => {
           if (retriesLeft > 0) setTimeout(() => attemptLogin(retriesLeft - 1), 8000);
-          else { setLoginStatus('error:' + err.message); console.log('Login failed after retries:', err); }
+          else console.log('Login failed after retries:', err);
         });
     };
     attemptLogin(2);
@@ -82,13 +79,13 @@ export function AuthProvider({ children }) {
     googleLogout();
     await logoutAction();
     setIsLoggedIn(false);
-    setLoginStatus('idle');
     setProfile(null);
     localStorage.removeItem('fit2go_profile');
+    localStorage.removeItem('fit2go_has_session');
   };
 
   return (
-    <AuthContext.Provider value={{ profile, isLoggedIn, loginStatus, theme, setTheme, login, logout }}>
+    <AuthContext.Provider value={{ profile, isLoggedIn, theme, setTheme, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
