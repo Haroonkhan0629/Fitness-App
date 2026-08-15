@@ -3,14 +3,16 @@
 import { useState, Fragment } from 'react';
 import { Modal, ModalHeader, Button, ModalFooter } from 'reactstrap';
 import { deleteExercise } from '@/app/actions';
+import { useAuth } from '@/context/auth';
 
 export default function ConfirmRemovalModal({ id, resetState, theme }) {
+  const { apiToken } = useAuth();
   const [modal, setModal] = useState(false);
   const toggle = () => setModal((prev) => !prev);
   const isDark = theme === 'dark';
 
   const handleDelete = () => {
-    deleteExercise(id).then(() => {
+    deleteExercise(apiToken, id).then(() => {
       resetState();
       toggle();
     }).catch(console.error);

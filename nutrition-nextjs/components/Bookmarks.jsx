@@ -6,11 +6,11 @@ import BookmarksList from './BookmarksList';
 import { getExercises } from '@/app/actions';
 
 export default function Bookmarks() {
-  const { profile, isLoggedIn, theme } = useAuth();
+  const { profile, apiToken, theme } = useAuth();
   const [exercises, setExercises] = useState([]);
 
   const loadExercises = () => {
-    getExercises(isLoggedIn).then(setExercises).catch(console.error);
+    getExercises(apiToken, !!apiToken).then(setExercises).catch(console.error);
   };
 
   const resetState = () => loadExercises();
@@ -18,7 +18,7 @@ export default function Bookmarks() {
   useEffect(() => {
     loadExercises();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoggedIn]);
+  }, [apiToken]);
 
   if (!profile) {
     return <p style={{ padding: '1rem' }}>Please log in to view your saved exercises.</p>;

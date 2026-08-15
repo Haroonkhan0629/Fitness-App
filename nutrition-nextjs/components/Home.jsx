@@ -7,11 +7,11 @@ import NewExerciseModal from './NewExerciseModal';
 import { getExercises } from '@/app/actions';
 
 export default function Home() {
-  const { profile, isLoggedIn, theme } = useAuth();
+  const { profile, apiToken, theme } = useAuth();
   const [exercises, setExercises] = useState([]);
 
   const loadExercises = () => {
-    getExercises(isLoggedIn).then(setExercises).catch(console.error);
+    getExercises(apiToken, !!apiToken).then(setExercises).catch(console.error);
   };
 
   const resetState = () => loadExercises();
@@ -20,7 +20,7 @@ export default function Home() {
     loadExercises();
   // Re-fetch when login state changes.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoggedIn]);
+  }, [apiToken]);
 
   const breadcrumb =
     theme === 'light' ? (

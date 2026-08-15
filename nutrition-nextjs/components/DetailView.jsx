@@ -2,11 +2,13 @@
 
 import { Button } from 'reactstrap';
 import { toggleBookmark } from '@/app/actions';
+import { useAuth } from '@/context/auth';
 
 export default function DetailView({ exercise, profile, resetState, toggle }) {
+  const { apiToken } = useAuth();
   const toggleSave = (e) => {
     e.preventDefault();
-    toggleBookmark(exercise.id).then(() => {
+    toggleBookmark(apiToken, exercise.id).then(() => {
       if (resetState) resetState();
     }).catch(console.error);
   };

@@ -3,8 +3,10 @@
 import { useState, useEffect } from 'react';
 import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
 import { createExercise, updateExercise } from '@/app/actions';
+import { useAuth } from '@/context/auth';
 
 export default function NewExerciseForm({ exercise, resetState, toggle }) {
+  const { apiToken } = useAuth();
   const [form, setForm] = useState({
     id: 0,
     name: '',
@@ -25,14 +27,14 @@ export default function NewExerciseForm({ exercise, resetState, toggle }) {
 
   const handleCreate = (e) => {
     e.preventDefault();
-    createExercise(form)
+    createExercise(apiToken, form)
       .then(() => { resetState(); toggle(); })
       .catch((error) => console.log('Create exercise failed:', error));
   };
 
   const handleEdit = (e) => {
     e.preventDefault();
-    updateExercise(form.id, form)
+    updateExercise(apiToken, form.id, form)
       .then(() => { resetState(); toggle(); })
       .catch(console.error);
   };

@@ -3,19 +3,21 @@
 import { useState, useEffect } from 'react';
 import { Table } from 'reactstrap';
 import { getUserHello } from '@/app/actions';
+import { useAuth } from '@/context/auth';
 
 export default function UserPage({ profile, logout, theme }) {
+  const { apiToken } = useAuth();
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    if (!profile) {
+    if (!apiToken) {
       setData(null);
       return;
     }
-    getUserHello()
+    getUserHello(apiToken)
       .then((res) => setData(res?.message))
       .catch(console.error);
-  }, [profile]);
+  }, [apiToken]);
 
   const tableVariant = theme === 'dark' ? 'dark' : 'light';
   const breadcrumb =
