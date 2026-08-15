@@ -22,8 +22,9 @@ export function AuthProvider({ children }) {
     const saved = localStorage.getItem('fit2go_profile');
     if (saved) {
       setProfile(JSON.parse(saved));
-      // Non-sensitive marker set after loginUser succeeds — no token stored here.
-      if (localStorage.getItem('fit2go_has_session') === '1') setIsLoggedIn(true);
+      // With httpOnly=false cookies, check if a valid session cookie exists.
+      const hasCookie = document.cookie.split(';').some((c) => c.trim().startsWith('fit2go_access='));
+      if (hasCookie) setIsLoggedIn(true);
     }
   }, []);
 
@@ -68,7 +69,7 @@ export function AuthProvider({ children }) {
     const attemptLogin = (retriesLeft) => {
       setLoginStatus('pending');
       loginUser(profile.id, 'random123')
-        .then(() => { setIsLoggedIn(true); setLoginStatus('ok'); localStorage.setItem('fit2go_has_session', '1'); })
+        .then(() => { setIsLoggedIn(true); setLoginStatus('ok'); })
         .catch((err) => {
           if (retriesLeft > 0) setTimeout(() => attemptLogin(retriesLeft - 1), 8000);
           else { setLoginStatus('error:' + err.message); console.log('Login failed after retries:', err); }
@@ -84,7 +85,6 @@ export function AuthProvider({ children }) {
     setLoginStatus('idle');
     setProfile(null);
     localStorage.removeItem('fit2go_profile');
-    localStorage.removeItem('fit2go_has_session');
   };
 
   return (
