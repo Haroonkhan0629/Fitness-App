@@ -44,29 +44,3 @@ export async function updateExercise(token, id, formData) {
 }
 
 export async function getUserHello(token) {
-  const res = await fetch(`${AUTH_BASE_URL}hello/`, {
-    headers: { 'Content-Type': 'application/json', ...bearer(token) },
-    cache: 'no-store',
-  });
-  if (!res.ok) throw new Error('Failed to fetch user data');
-  return res.json();
-}
-
-export async function registerUser(profileData) {
-  const res = await fetch(`${AUTH_BASE_URL}register/`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(profileData),
-  });
-  if (!res.ok) throw new Error('Failed to register user');
-}
-
-export async function loginUser(username, password) {
-  const res = await fetch(`${AUTH_BASE_URL}login/`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password }),
-  });
-  if (!res.ok) throw new Error('Login failed');
-  return res.json();
-}
