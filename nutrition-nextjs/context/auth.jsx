@@ -21,7 +21,12 @@ export function AuthProvider({ children }) {
   // isLoggedIn is set only after loginUser completes, not here.
   useEffect(() => {
     const saved = localStorage.getItem('fit2go_profile');
-    if (saved) setProfile(JSON.parse(saved));
+    if (saved) {
+      setProfile(JSON.parse(saved));
+      // If a valid access cookie already exists, mark as logged in immediately.
+      const hasCookie = document.cookie.split(';').some((c) => c.trim().startsWith('fit2go_access='));
+      if (hasCookie) setIsLoggedIn(true);
+    }
   }, []);
 
   const login = useGoogleLogin({
