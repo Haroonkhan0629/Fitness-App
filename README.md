@@ -50,15 +50,14 @@ Unified project workspace containing the Fit2Go mobile web frontend and the Djan
 
 ## Authentication
 
-Fit2Go uses **JWT (JSON Web Token)** authentication with **HTTP-only cookies**:
+Fit2Go uses **JWT (JSON Web Token)** authentication with **localStorage**:
 
-- On sign-in, the Next.js server calls Django, receives the token pair, and stores both as **HTTP-only cookies** — the access token (`fit2go_access`, 5 min) and the refresh token (`fit2go_refresh`, 7 days)
-- Cookies are flagged `HttpOnly`, `Secure`, and `SameSite=Lax` — invisible to browser JavaScript and protected from XSS and CSRF attacks
-- A non-sensitive session marker (`fit2go_has_session=1`) is written to `localStorage` after login so the app knows a session exists on page reload without reading the HTTP-only cookie
-- Every server action reads `fit2go_access` from the cookie store server-side and forwards it as `Authorization: Bearer <token>` to Django — the token is never exposed in the browser's network tab
-- When a server action receives a 401, it silently calls `/api/auth/token/refresh/`, updates the access cookie, and retries the original request — entirely server-side, transparent to the user
-- When the refresh token expires (after 7 days of inactivity) the server action throws and the user is prompted to sign in again
-- The user's **profile** (name, picture, email) is stored in `localStorage` and distributed across components via React Context — it is not sensitive and is used only for UI rendering
+- On sign-in, auth calls go directly from the browser to Django (bypassing Next.js server actions), which avoids Netlify function cold-start timeouts
+- Django returns an access token and a refresh token; both are stored in `localStorage` (`fit2go_access` and `fit2go_refresh`) and the access token is held in React Context as `apiToken`
+- On every page load, the app silently calls `/api/auth/token/refresh/` using the stored refresh token to get a fresh access token — keeping the session alive without requiring the user to re-login
+- Server actions receive the access token as a parameter from the calling component and forward it as `Authorization: Bearer <token>` to Django
+- The user's **profile** (name, picture, email) is stored in `localStorage` as `fit2go_profile` and distributed across components via React Context — used only for UI rendering
+- On logout, `fit2go_access`, `fit2go_refresh`, and `fit2go_profile` are all removed from `localStorage`
 
 ## Mobile App Notice
 
