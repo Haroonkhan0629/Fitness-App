@@ -61,16 +61,11 @@ export function AuthProvider({ children }) {
       .catch(console.log);
   }, [user]);
 
-  // On new Google login, register then login sequentially to avoid race condition on new accounts.
+  // On new Google login, register then login. For returning users run both in parallel.
   useEffect(() => {
     if (!profile || !user) return;
     const profileData = { name: profile.name, email: profile.email, username: profile.id };
-    const doAuth = async () => {
-      await fetch(`${AUTH_URL}register/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(profileData),
-      }).catch(console.log);
+    const doLogin = () =>
       fetch(`${AUTH_URL}login/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -85,8 +80,18 @@ export function AuthProvider({ children }) {
           }
         })
         .catch(console.log);
-    };
-    doAuth();
+    const registerReq = fetch(`${AUTH_URL}register/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(profileData),
+    }).catch(console.log);
+    // Returning users exist in Django already — login in parallel; new users await register first.
+    const isReturningUser = Boolean(localStorage.getItem('fit2go_refresh'));
+    if (isReturningUser) {
+      doLogin();
+    } else {
+      registerReq.then(doLogin);
+    }
   }, [profile]);
 
   const logout = () => {
