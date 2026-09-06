@@ -52,10 +52,10 @@ Unified project workspace containing the Fit2Go mobile web frontend and the Djan
 
 Fit2Go uses **JWT (JSON Web Token)** authentication with **localStorage**:
 
-- On sign-in, auth calls go directly from the browser to Django (bypassing Next.js server actions), which avoids Netlify function cold-start timeouts
+- On sign-in, auth calls go directly from the browser to Django (no Next.js server actions involved), which avoids Netlify function cold-start timeouts
 - Django returns an access token and a refresh token; both are stored in `localStorage` (`fit2go_access` and `fit2go_refresh`) and the access token is held in React Context as `apiToken`
 - On every page load, the app silently calls `/api/auth/token/refresh/` using the stored refresh token to get a fresh access token — keeping the session alive without requiring the user to re-login
-- Server actions receive the access token as a parameter from the calling component and forward it as `Authorization: Bearer <token>` to Django
+- All API calls (exercises CRUD, bookmarks, profile) are made directly from the browser to Django, passing the access token as `Authorization: Bearer <token>`
 - The user's **profile** (name, picture, email) is stored in `localStorage` as `fit2go_profile` and distributed across components via React Context — used only for UI rendering
 - On logout, `fit2go_access`, `fit2go_refresh`, and `fit2go_profile` are all removed from `localStorage`
 
@@ -178,6 +178,7 @@ The app has two parts that each need to be deployed separately: the **backend** 
   - `SECRET_KEY` — a long random string used by Django for security (also used to sign JWT tokens)
   - `DEBUG` — set to `False`
   - `ALLOWED_HOSTS` — your Render URL (e.g. `your-app.onrender.com`)
+  - `CORS_ALLOWED_ORIGINS` — your deployed Netlify URL (e.g. `https://your-app.netlify.app`), used to restrict cross-origin API access to only your frontend
 - Click **Create Web Service** and wait for the build to finish
 - Copy your backend URL — you will need it in the next step
 

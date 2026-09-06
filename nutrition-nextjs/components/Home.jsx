@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/auth';
 import ExerciseList from './ExerciseList';
 import NewExerciseModal from './NewExerciseModal';
-import { getExercises } from '@/app/actions';
+import { getExercises } from '@/lib/api';
 
 export default function Home() {
   const { profile, apiToken, theme } = useAuth();

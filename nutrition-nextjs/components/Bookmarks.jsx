@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/auth';
 import BookmarksList from './BookmarksList';
-import { getExercises } from '@/app/actions';
+import { getExercises } from '@/lib/api';
 
 export default function Bookmarks() {
   const { profile, apiToken, theme } = useAuth();

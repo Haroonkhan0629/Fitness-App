@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Table } from 'reactstrap';
-import { getUserHello } from '@/app/actions';
+import { getUserHello } from '@/lib/api';
 import { useAuth } from '@/context/auth';
 
 export default function UserPage({ profile, logout, theme }) {

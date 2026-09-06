@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
-import { createExercise, updateExercise } from '@/app/actions';
+import { createExercise, updateExercise } from '@/lib/api';
 import { useAuth } from '@/context/auth';
 
 export default function NewExerciseForm({ exercise, resetState, toggle }) {

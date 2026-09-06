@@ -64,17 +64,15 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware'
 ]
 
-# CORS_ALLOWED_ORIGINS = [
-# "https://domain.com",
-# "https://api.domain.com",
-# "http://localhost:3000",
-# "http://127.0.0.1:8000",
-# "http://45.73.139.206:8000",
-# "https://www.googleapis.com"
-# ]
+# Only the deployed Netlify frontend (and localhost for development) may call this API.
+CORS_ALLOWED_ORIGINS = os.environ.get(
+    'CORS_ALLOWED_ORIGINS', 'https://fit2go-pro.netlify.app'
+).split(',')
+
+if DEBUG:
+    CORS_ALLOWED_ORIGINS += ['http://localhost:3000', 'http://127.0.0.1:3000']
 
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOW_METHODS = [
 'DELETE',

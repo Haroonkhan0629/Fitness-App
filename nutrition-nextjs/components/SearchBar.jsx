@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { FaSearch } from 'react-icons/fa';
-import { getExercises } from '@/app/actions';
+import { getExercises } from '@/lib/api';
 import { useAuth } from '@/context/auth';
 
 export default function SearchBar({ setResults }) {

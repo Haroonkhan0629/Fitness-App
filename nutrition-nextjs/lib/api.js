@@ -1,8 +1,6 @@
-'use server';
-
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || '';
 const API_URL = `${BACKEND_URL}/api/main_app/`;
-const AUTH_BASE_URL = `${BACKEND_URL}/api/auth/`;
+const AUTH_URL = `${BACKEND_URL}/api/auth/`;
 
 function bearer(token) {
   return token ? { Authorization: `Bearer ${token}` } : {};
@@ -44,3 +42,7 @@ export async function updateExercise(token, id, formData) {
 }
 
 export async function getUserHello(token) {
+  const res = await fetch(`${AUTH_URL}hello/`, { headers: bearer(token), cache: 'no-store' });
+  if (!res.ok) throw new Error('Failed to fetch user greeting');
+  return res.json();
+}

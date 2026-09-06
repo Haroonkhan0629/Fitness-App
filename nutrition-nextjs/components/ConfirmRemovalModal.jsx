@@ -2,7 +2,7 @@
 
 import { useState, Fragment } from 'react';
 import { Modal, ModalHeader, Button, ModalFooter } from 'reactstrap';
-import { deleteExercise } from '@/app/actions';
+import { deleteExercise } from '@/lib/api';
 import { useAuth } from '@/context/auth';
 
 export default function ConfirmRemovalModal({ id, resetState, theme }) {

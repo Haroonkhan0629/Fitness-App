@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from 'reactstrap';
-import { toggleBookmark } from '@/app/actions';
+import { toggleBookmark } from '@/lib/api';
 import { useAuth } from '@/context/auth';
 
 export default function DetailView({ exercise, profile, resetState, toggle }) {
