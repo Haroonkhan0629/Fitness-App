@@ -24,19 +24,19 @@ export default function Navigation() {
       {/* Desktop top navbar */}
       <nav className="navbar top-nav navbar-expand-md navbar-light d-none d-lg-block sticky-top" role="navigation">
         <div className="container-fluid">
-          <Link className={`navbar-brand${pathname === '/home' ? ' active' : ''}`} href="/home">Exercises</Link>
+          <Link className="navbar-brand" href="/home">Exercises</Link>
           <Nav className="ml-auto">
             <NavItem>
-              <Link href="/search" className={`nav-link${pathname === '/search' ? ' active' : ''}`}>Search</Link>
+              <Link href="/search" className="nav-link">Search</Link>
             </NavItem>
             <NavItem>
-              <Link href="/login" className={`nav-link${pathname === '/login' ? ' active' : ''}`}>{profile ? 'Profile' : 'Login'}</Link>
+              <Link href="/login" className="nav-link">{profile ? 'Profile' : 'Login'}</Link>
             </NavItem>
             <NavItem>
-              <Link href="/bookmarks" className={`nav-link${pathname === '/bookmarks' ? ' active' : ''}`}>Bookmarks</Link>
+              <Link href="/bookmarks" className="nav-link">Bookmarks</Link>
             </NavItem>
             <NavItem>
-              <Link href="/settings" className={`nav-link${pathname === '/settings' ? ' active' : ''}`}>Settings</Link>
+              <Link href="/settings" className="nav-link">Settings</Link>
             </NavItem>
           </Nav>
         </div>
