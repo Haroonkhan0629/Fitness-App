@@ -33,7 +33,7 @@ export default function Navigation() {
         <div className="container-fluid px-0">
           <Nav className="w-100 d-flex">
             {desktopTabs.map((tab) => (
-              <NavItem key={tab.route} className="flex-fill text-center">
+              <NavItem key={tab.route} className="top-nav-item">
                 <Link
                   href={tab.route}
                   className={`nav-link${pathname === tab.route ? ' active' : ''}`}
