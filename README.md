@@ -24,7 +24,6 @@ Unified project workspace containing the Fit2Go mobile web frontend and the Djan
 - **JavaScript (ES6+)** — the programming language the frontend is written in
 - **Next.js 14** — React framework that provides file-based routing, server-side pre-rendering, and automatic code splitting per route
 - **React 18** — the underlying UI library used by Next.js for component rendering and state management
-- **Next.js Server Actions** — server-side functions that proxy all API calls to the Django backend; the browser never contacts Django directly
 - **Bootstrap and Reactstrap** — pre-built styling components for a consistent mobile-friendly layout
 - **Google OAuth (`@react-oauth/google`)** — allows users to sign in with their Google account instead of creating a separate password
 - **Node.js and npm** — required to run and build the Next.js app locally
@@ -52,7 +51,7 @@ Unified project workspace containing the Fit2Go mobile web frontend and the Djan
 
 Fit2Go uses **JWT (JSON Web Token)** authentication with **localStorage**:
 
-- On sign-in, auth calls go directly from the browser to Django (no Next.js server actions involved), which avoids Netlify function cold-start timeouts
+- On sign-in, auth calls go directly from the browser to Django, avoiding Netlify function cold-start timeouts
 - Django returns an access token and a refresh token; both are stored in `localStorage` (`fit2go_access` and `fit2go_refresh`) and the access token is held in React Context as `apiToken`
 - On every page load, the app silently calls `/api/auth/token/refresh/` using the stored refresh token to get a fresh access token — keeping the session alive without requiring the user to re-login
 - All API calls (exercises CRUD, bookmarks, profile) are made directly from the browser to Django, passing the access token as `Authorization: Bearer <token>`

@@ -18,26 +18,30 @@ const tabs = [
 export default function Navigation() {
   const { profile } = useAuth();
   const pathname = usePathname();
+  const desktopTabs = [
+    { route: '/home', label: 'Exercises' },
+    { route: '/search', label: 'Search' },
+    { route: '/login', label: profile ? 'Profile' : 'Login' },
+    { route: '/bookmarks', label: 'Bookmarks' },
+    { route: '/settings', label: 'Settings' },
+  ];
 
   return (
     <div>
       {/* Desktop top navbar */}
       <nav className="navbar top-nav navbar-expand-md navbar-light d-none d-lg-block sticky-top" role="navigation">
-        <div className="container-fluid">
-          <Link className="navbar-brand" href="/home">Exercises</Link>
-          <Nav className="ml-auto">
-            <NavItem>
-              <Link href="/search" className="nav-link">Search</Link>
-            </NavItem>
-            <NavItem>
-              <Link href="/login" className="nav-link">{profile ? 'Profile' : 'Login'}</Link>
-            </NavItem>
-            <NavItem>
-              <Link href="/bookmarks" className="nav-link">Bookmarks</Link>
-            </NavItem>
-            <NavItem>
-              <Link href="/settings" className="nav-link">Settings</Link>
-            </NavItem>
+        <div className="container-fluid px-0">
+          <Nav className="w-100 d-flex">
+            {desktopTabs.map((tab) => (
+              <NavItem key={tab.route} className="flex-fill text-center">
+                <Link
+                  href={tab.route}
+                  className={`nav-link${pathname === tab.route ? ' active' : ''}`}
+                >
+                  {tab.label}
+                </Link>
+              </NavItem>
+            ))}
           </Nav>
         </div>
       </nav>

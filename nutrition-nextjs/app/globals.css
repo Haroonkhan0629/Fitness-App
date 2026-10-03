@@ -19,6 +19,10 @@
   color: #922c88 !important;
 }
 
+.top-nav .nav-link.active {
+  color: #922c88 !important;
+}
+
 .dark .bottom-nav-link.active,
 .dark .nav-link.active {
   color: #922c88 !important;
