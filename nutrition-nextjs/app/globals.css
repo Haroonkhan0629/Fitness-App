@@ -4,6 +4,16 @@
   border-bottom: 1px solid #e9ecef;
 }
 
+.top-nav .desktop-nav-links {
+  display: flex;
+  width: 100%;
+}
+
+.top-nav .desktop-nav-links .nav-item {
+  flex: 1;
+  text-align: center;
+}
+
 .bottom-tab-nav {
   background-color: #fff !important;
   border-top: 1px solid #e9ecef;
@@ -16,6 +26,10 @@
 }
 
 .bottom-nav-link.active {
+  color: #922c88 !important;
+}
+
+.top-nav .nav-link.active {
   color: #922c88 !important;
 }
 
