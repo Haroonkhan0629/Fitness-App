@@ -1,17 +1,13 @@
 import json
 from pathlib import Path
-import time
 
 from django.contrib.auth.models import User
-from django.conf import settings
 from django.views.decorators.csrf import ensure_csrf_cookie
-import requests
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import Exercise
 from .serializers import *
@@ -122,107 +118,26 @@ def exercise_bookmark(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-class GoogleLogin(APIView):
-    # Verifies Google's ID token before creating or reusing an account.
-    def post(self, request):
-        google_credential = request.data.get("credential")
-        if not isinstance(google_credential, str) or not google_credential.strip():
-            return Response(
-                {"detail": "Google credential is required"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        if not settings.GOOGLE_CLIENT_ID:
-            return Response(
-                {"detail": "Google sign-in is not configured on the server"},
-                status=status.HTTP_503_SERVICE_UNAVAILABLE,
-            )
-
+class RegisterNewUser(APIView):
+    # Creates a new user account from Google login data.
+    def post(self,request):
+        username = request.data.get("username")
+        email = request.data.get("email")
+        name = request.data.get("name")
+        
+        # Register the user with default password.
         try:
-            google_response = requests.get(
-                "https://oauth2.googleapis.com/tokeninfo",
-                params={"id_token": google_credential},
-                timeout=5,
+            user  = User.objects.create_user(
+                username = username,
+                password = "random123",
+                email = email,
+                first_name = name,
             )
-        except requests.RequestException:
-            return Response(
-                {"detail": "Google authentication is temporarily unavailable"},
-                status=status.HTTP_502_BAD_GATEWAY,
-            )
-
-        if google_response.status_code != status.HTTP_200_OK:
-            response_status = (
-                status.HTTP_401_UNAUTHORIZED
-                if google_response.status_code < 500
-                else status.HTTP_502_BAD_GATEWAY
-            )
-            return Response(
-                {"detail": "Google access token is invalid or could not be verified"},
-                status=response_status,
-            )
-
-        try:
-            google_profile = google_response.json()
-        except ValueError:
-            return Response(
-                {"detail": "Google returned an invalid authentication response"},
-                status=status.HTTP_502_BAD_GATEWAY,
-            )
-
-        try:
-            token_expiration = int(google_profile.get("exp", 0))
-        except (TypeError, ValueError):
-            token_expiration = 0
-
-        google_id = google_profile.get("sub")
-        google_email = google_profile.get("email") or ""
-        if (
-            google_profile.get("aud") != settings.GOOGLE_CLIENT_ID
-            or google_profile.get("iss") not in {
-                "accounts.google.com",
-                "https://accounts.google.com",
-            }
-            or token_expiration <= time.time()
-            or not isinstance(google_id, str)
-            or not google_id
-            or not google_email
-            or google_profile.get("email_verified") not in (True, "true")
-        ):
-            return Response(
-                {"detail": "Google credential is invalid for this application"},
-                status=status.HTTP_401_UNAUTHORIZED,
-            )
-
-        user, created = User.objects.get_or_create(
-            username=google_id,
-            defaults={
-                "email": google_email,
-                "first_name": google_profile.get("name") or "",
-            },
-        )
-        if not created and user.email.casefold() != google_email.casefold():
-            return Response(
-                {"detail": "Google account does not match the existing account"},
-                status=status.HTTP_409_CONFLICT,
-            )
-        if created:
-            user.set_unusable_password()
-            user.save(update_fields=["password"])
-
-        refresh = RefreshToken.for_user(user)
-        return Response(
-            {
-                "access": str(refresh.access_token),
-                "refresh": str(refresh),
-                "profile": {
-                    "id": google_id,
-                    "email": google_email,
-                    "name": google_profile.get("name") or "",
-                    "picture": google_profile.get("picture", ""),
-                },
-            },
-            status=status.HTTP_201_CREATED if created else status.HTTP_200_OK,
-        )
-
+            user.save()
+            print("{} created successfully".format(user.username))
+            return Response({"message":"User created"})
+        except:
+            return Response({"message":"User creation failed or user already exists"})
 
 class greeting(APIView):
     # Sends a personalized greeting to authenticated users.

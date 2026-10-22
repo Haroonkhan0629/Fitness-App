@@ -1,8 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect } from 'react';
-import { googleLogout } from '@react-oauth/google';
-import { isAccessTokenValid, refreshAccessToken } from '@/lib/api';
+import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 
 const AuthContext = createContext(null);
 // Auth calls go directly from the browser so Render cold-start never hits a Netlify timeout.
@@ -13,95 +12,99 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
+  const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [theme, setTheme] = useState('light');
   const [apiToken, setApiToken] = useState(null);
 
-  // Reuse an unexpired access token; refresh only when it is missing or expired.
+  // Rehydrate from localStorage and silently refresh the access token on mount.
   useEffect(() => {
-    const handleSessionExpired = () => {
-      setApiToken(null);
-      setProfile(null);
-    };
-    const handleTokenRefreshed = (event) => setApiToken(event.detail.access);
-    window.addEventListener('fit2go:session-expired', handleSessionExpired);
-    window.addEventListener('fit2go:token-refreshed', handleTokenRefreshed);
-
+    const saved = localStorage.getItem('fit2go_profile');
+    if (saved) setProfile(JSON.parse(saved));
     const access = localStorage.getItem('fit2go_access');
     const refresh = localStorage.getItem('fit2go_refresh');
-    const accessIsValid = access && isAccessTokenValid(access);
-    const savedProfile = localStorage.getItem('fit2go_profile');
-
-    if (accessIsValid) setApiToken(access);
-    if (savedProfile && (accessIsValid || refresh)) {
-      try {
-        setProfile(JSON.parse(savedProfile));
-      } catch (error) {
-        console.error('Saved profile is invalid:', error);
-        localStorage.removeItem('fit2go_profile');
-      }
-    } else if (!accessIsValid && !refresh) {
-      localStorage.removeItem('fit2go_profile');
-    }
-
-    if (refresh && !accessIsValid) {
-      refreshAccessToken().catch((error) => console.error('Token refresh failed:', error));
-    }
-
-    return () => {
-      window.removeEventListener('fit2go:session-expired', handleSessionExpired);
-      window.removeEventListener('fit2go:token-refreshed', handleTokenRefreshed);
-    };
-  }, []);
-
-  const loginWithGoogle = async (googleResponse) => {
-    try {
-      const response = await fetch(`${AUTH_URL}google/`, {
+    if (access) setApiToken(access);
+    if (refresh) {
+      fetch(`${AUTH_URL}token/refresh/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ credential: googleResponse.credential }),
-      });
-      const data = await response.json();
-      if (!response.ok || !data.access || !data.refresh || !data.profile) {
-        throw new Error(data.detail || `Google sign-in failed (${response.status})`);
-      }
-
-      setProfile(data.profile);
-      setApiToken(data.access);
-      localStorage.setItem('fit2go_profile', JSON.stringify(data.profile));
-      localStorage.setItem('fit2go_access', data.access);
-      localStorage.setItem('fit2go_refresh', data.refresh);
-    } catch (error) {
-      console.error('Google sign-in failed:', error);
+        body: JSON.stringify({ refresh }),
+      })
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data?.access) {
+            setApiToken(data.access);
+            localStorage.setItem('fit2go_access', data.access);
+          }
+        })
+        .catch(() => {});
     }
-  };
+  }, []);
 
-  const logout = async () => {
-    const refresh = localStorage.getItem('fit2go_refresh');
+  const login = useGoogleLogin({
+    onSuccess: (codeResponse) => setUser(codeResponse),
+    onError: (error) => console.log('login failed:', error),
+  });
+
+  // When Google login succeeds, fetch full user details from Google.
+  useEffect(() => {
+    if (!user) return;
+    fetch(
+      `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${user.access_token}`,
+      { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${user.access_token}` } }
+    )
+      .then((res) => res.json())
+      .then((nextProfile) => {
+        setProfile(nextProfile);
+        localStorage.setItem('fit2go_profile', JSON.stringify(nextProfile));
+      })
+      .catch(console.log);
+  }, [user]);
+
+  // On new Google login, register then login. For returning users run both in parallel.
+  useEffect(() => {
+    if (!profile || !user) return;
+    const profileData = { name: profile.name, email: profile.email, username: profile.id };
+    const doLogin = () =>
+      fetch(`${AUTH_URL}login/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: profile.id, password: 'random123' }),
+      })
+        .then((res) => res.json())
+        .then(({ access, refresh }) => {
+          if (access) {
+            setApiToken(access);
+            localStorage.setItem('fit2go_access', access);
+            localStorage.setItem('fit2go_refresh', refresh);
+          }
+        })
+        .catch(console.log);
+    const registerReq = fetch(`${AUTH_URL}register/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(profileData),
+    }).catch(console.log);
+    // Returning users exist in Django already — login in parallel; new users await register first.
+    const isReturningUser = Boolean(localStorage.getItem('fit2go_refresh'));
+    if (isReturningUser) {
+      doLogin();
+    } else {
+      registerReq.then(doLogin);
+    }
+  }, [profile]);
+
+  const logout = () => {
     googleLogout();
     setProfile(null);
     setApiToken(null);
     localStorage.removeItem('fit2go_profile');
     localStorage.removeItem('fit2go_access');
     localStorage.removeItem('fit2go_refresh');
-
-    if (!refresh) return;
-    try {
-      const response = await fetch(`${AUTH_URL}logout/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ refresh }),
-      });
-      if (!response.ok) {
-        throw new Error(`Token revocation failed (${response.status})`);
-      }
-    } catch (error) {
-      console.error('Logout token revocation failed:', error);
-    }
   };
 
   return (
-    <AuthContext.Provider value={{ profile, apiToken, theme, setTheme, loginWithGoogle, logout }}>
+    <AuthContext.Provider value={{ profile, apiToken, theme, setTheme, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
