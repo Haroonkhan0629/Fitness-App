@@ -236,6 +236,13 @@ input:checked + .slider:before {
   height: 100vh;
 }
 
+.google-login-slot {
+  display: flex;
+  justify-content: center;
+  width: 300px;
+  min-height: 40px;
+}
+
 .login-button {
   padding: 10px 20px;
   background-color: #4285f4;

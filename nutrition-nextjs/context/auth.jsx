@@ -16,6 +16,7 @@ export function AuthProvider({ children }) {
   const [profile, setProfile] = useState(null);
   const [theme, setTheme] = useState('light');
   const [apiToken, setApiToken] = useState(null);
+  const [authInitialized, setAuthInitialized] = useState(false);
 
   // Reuse an unexpired access token; refresh only when it is missing or expired.
   useEffect(() => {
@@ -47,6 +48,8 @@ export function AuthProvider({ children }) {
     if (refresh && !accessIsValid) {
       refreshAccessToken().catch((error) => console.error('Token refresh failed:', error));
     }
+
+    setAuthInitialized(true);
 
     return () => {
       window.removeEventListener('fit2go:session-expired', handleSessionExpired);
@@ -101,7 +104,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ profile, apiToken, theme, setTheme, loginWithGoogle, logout }}>
+    <AuthContext.Provider value={{ profile, apiToken, theme, setTheme, authInitialized, loginWithGoogle, logout }}>
       {children}
     </AuthContext.Provider>
   );

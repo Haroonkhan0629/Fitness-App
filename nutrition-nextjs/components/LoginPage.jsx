@@ -5,8 +5,10 @@ import { useAuth } from '@/context/auth';
 import UserPage from './UserPage';
 
 export default function LoginPage() {
-  const { profile, loginWithGoogle, logout, theme } = useAuth();
+  const { profile, loginWithGoogle, logout, theme, authInitialized } = useAuth();
   const hasGoogleClientId = Boolean((process.env.NEXT_PUBLIC_CLIENT_ID || '').trim());
+
+  if (!authInitialized) return null;
 
   if (profile) {
     return (
@@ -21,13 +23,16 @@ export default function LoginPage() {
       {!hasGoogleClientId && (
         <p>Please set NEXT_PUBLIC_CLIENT_ID in .env.local, then restart the dev server.</p>
       )}
-      <GoogleLogin
-        onSuccess={loginWithGoogle}
-        onError={() => console.error('Google login failed')}
-        theme="filled_blue"
-        size="large"
-        text="signin_with"
-      />
+      <div className="google-login-slot">
+        <GoogleLogin
+          onSuccess={loginWithGoogle}
+          onError={() => console.error('Google login failed')}
+          theme="filled_blue"
+          size="large"
+          text="signin_with"
+          width="300"
+        />
+      </div>
     </div>
   );
 }
