@@ -17,6 +17,12 @@ Unified project workspace containing the Fit2Go mobile web frontend and the Djan
 - `nutrition-nextjs/` -> frontend (Next.js mobile web app)
 - `nutrition-backend/` -> backend (Django REST API)
 
+## Exercise Images
+
+The starter exercise images are stored in `nutrition-nextjs/public/images/exercises/` and served by the frontend at `/images/exercises/`. The seed records in `nutrition-backend/exercise.json` reference these local paths, so add or update the corresponding image file whenever you change a seed image path.
+
+The images were sourced from [Free Exercise DB](https://github.com/yuhonas/free-exercise-db), which publishes its dataset under the [Unlicense](https://github.com/yuhonas/free-exercise-db/blob/main/LICENSE.md). The full downloaded source dataset in the root `exercises/` directory is local-only and is excluded from Git; only the images used by this app are included.
+
 ## Tools, Languages, and Frameworks
 
 ### Frontend

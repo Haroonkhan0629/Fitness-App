@@ -14,9 +14,13 @@ nutrition-nextjs/.next/
 __pycache__/
 *.py[cod]
 *.sqlite3
+*.sqlite3.bak
 .venv/
 venv/
 nutrition-backend/staticfiles/
+
+# Local copy of the exercise image source dataset
+/exercises/
 
 # Env files
 .env
