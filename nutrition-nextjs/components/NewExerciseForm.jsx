@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
 import { createExercise, updateExercise } from '@/lib/api';
 import { useAuth } from '@/context/auth';
+import { EXERCISE_IMAGES, EXERCISE_IMAGE_GROUPS } from '@/lib/exerciseImages';
 
 export default function NewExerciseForm({ exercise, resetState, toggle }) {
   const { apiToken } = useAuth();
@@ -58,8 +59,23 @@ export default function NewExerciseForm({ exercise, resetState, toggle }) {
         <Input type="text" name="description" onChange={onChange} value={form.description} />
       </FormGroup>
       <FormGroup>
-        <Label for="image">Image URL:</Label>
-        <Input type="text" name="image" onChange={onChange} value={form.image} />
+        <Label for="image">Image:</Label>
+        <Input type="select" name="image" id="image" onChange={onChange} value={form.image}>
+          <option value="">No image</option>
+          {form.image && !EXERCISE_IMAGES.some((img) => img.value === form.image) && (
+            <option value={form.image}>Current image</option>
+          )}
+          {EXERCISE_IMAGE_GROUPS.map(({ group, images }) => (
+            <optgroup key={group} label={group}>
+              {images.map((img) => (
+                <option key={img.value} value={img.value}>{img.label}</option>
+              ))}
+            </optgroup>
+          ))}
+        </Input>
+        {form.image && (
+          <img className="exercise-image" src={form.image} alt="Selected exercise" />
+        )}
       </FormGroup>
       <Button>Send</Button>
     </Form>
